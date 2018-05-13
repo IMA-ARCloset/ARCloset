@@ -6,22 +6,24 @@ using UnityEngine.Windows.Speech;
 public class VoiceControl : MonoBehaviour
 {
     //Reconocimiento por voz
-    public string[] words = new string[] { "opciones", "cerrar", "color", "día", "noche", "salir" };
-    public ConfidenceLevel umbral = ConfidenceLevel.Medium;
+    public string[] keywords = new string[] { "opciones", "tinte", "día", "noche", "sonido", "salir" };
+    public ConfidenceLevel confidence = ConfidenceLevel.Low;
     protected KeywordRecognizer recognizer;
 
     //Objects
-    public GameObject settingsPanel;
-    public Animator settingIconAnim;
+    public Animator settingsIconAnim;
+    public Animator settingsPanelAnim;
+
+    private bool settingsOpened;
 
     // Use this for initialization
     void Start()
     {
-        settingsPanel.SetActive(false);
+        settingsOpened = false;
 
-        if (words != null)
+        if (keywords != null)
         {
-            recognizer = new KeywordRecognizer(words, umbral);
+            recognizer = new KeywordRecognizer(keywords, confidence);
             recognizer.OnPhraseRecognized += OnPhraseRecognized;
             recognizer.Start();
         }
@@ -34,12 +36,18 @@ public class VoiceControl : MonoBehaviour
         switch (args.text)
         {
             case "opciones":
-                settingIconAnim.Play("InitTopOptions");
-                settingsPanel.SetActive(true);
-                break;
-            case "cerrar":
-                settingIconAnim.Play("OptionsToInit");
-                settingsPanel.SetActive(false);
+                if (!settingsOpened)
+                {
+                    settingsIconAnim.Play("I_InitTopOptions");
+                    settingsPanelAnim.Play("P_Open");
+                    settingsOpened = true;
+                }
+                else
+                {
+                    settingsIconAnim.Play("I_OptionsToInit");
+                    settingsPanelAnim.Play("P_Close");
+                    settingsOpened = false;
+                }
                 break;
         }
     }
