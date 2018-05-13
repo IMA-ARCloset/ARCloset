@@ -7,10 +7,12 @@ public class BodySourceView : MonoBehaviour
 {
     public Material BoneMaterial;
     public GameObject BodySourceManager;
-    
+    public List<Kinect.Body> l_bodysTracked;
+
     private Dictionary<ulong, GameObject> _Bodies = new Dictionary<ulong, GameObject>();
     private BodySourceManager _BodyManager;
     
+
     private Dictionary<Kinect.JointType, Kinect.JointType> _BoneMap = new Dictionary<Kinect.JointType, Kinect.JointType>()
     {
         { Kinect.JointType.FootLeft, Kinect.JointType.AnkleLeft },
@@ -45,6 +47,7 @@ public class BodySourceView : MonoBehaviour
     
     void Update () 
     {
+        
         if (BodySourceManager == null)
         {
             return;
@@ -57,6 +60,7 @@ public class BodySourceView : MonoBehaviour
         }
         
         Kinect.Body[] data = _BodyManager.GetData();
+        l_bodysTracked = new List<Kinect.Body>();
         if (data == null)
         {
             return;
@@ -101,7 +105,7 @@ public class BodySourceView : MonoBehaviour
                 {
                     _Bodies[body.TrackingId] = CreateBodyObject(body.TrackingId);
                 }
-                
+                l_bodysTracked.Add(body);
                 RefreshBodyObject(body, _Bodies[body.TrackingId]);
             }
         }
@@ -111,7 +115,7 @@ public class BodySourceView : MonoBehaviour
     {
         GameObject body = new GameObject("Body:" + id);
 
-        body.transform.position = new Vector3(500, 500, 500);
+        //body.transform.position = new Vector3(500, 500, 500);
         
         for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++)
         {
@@ -148,6 +152,8 @@ public class BodySourceView : MonoBehaviour
             LineRenderer lr = jointObj.GetComponent<LineRenderer>();
             if(targetJoint.HasValue)
             {
+                jointObj.transform.LookAt(GetVector3FromJoint(targetJoint.Value));
+
                 lr.SetPosition(0, jointObj.localPosition);
                 lr.SetPosition(1, GetVector3FromJoint(targetJoint.Value));
                 lr.SetColors(GetColorForState (sourceJoint.TrackingState), GetColorForState(targetJoint.Value.TrackingState));
