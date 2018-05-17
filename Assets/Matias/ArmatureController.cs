@@ -31,10 +31,10 @@ public class ArmatureController : MonoBehaviour
                 Kinect.Joint sourceJoint = body.Joints[jt];
                 Kinect.Joint? targetJoint = null;
 
-                if (_BoneMap.ContainsKey(jt))
-                {
-                    targetJoint = body.Joints[_BoneMap[jt]];
-                }
+                //if (_BoneMap.ContainsKey(jt))
+                //{
+                //    targetJoint = body.Joints[_BoneMap[jt]];
+                //}
             }
 
 
