@@ -15,9 +15,13 @@ public class CustomGestureManagerExample : MonoBehaviour
     Gesture _gesture1, _gesture2, _gesture3, _gesture4;
     Gesture _gesture1Progress, _gesture2Progress, _gesture3Progress, _gesture4Progress;
     DiscreteGestureResult gesture1, gesture2, gesture3, gesture4;
-    //ParticleSystem _ps;
+
     Renderer cubeColor;
     public GameObject AttachedObject; // El objeto que cambiaremos en funcion de nuestros
+    public Animator settingsIconAnim;
+    public Animator settingsPanelAnim;
+
+    bool settingsOpened;
 
     public void SetTrackingId(ulong id)
     {
@@ -35,8 +39,9 @@ public class CustomGestureManagerExample : MonoBehaviour
             // _ps.emissionRate = 4;
             // _ps.startColor = Color.blue;
             cubeColor = AttachedObject.GetComponent<Renderer>();
-
         }
+
+        settingsOpened = false;
 
         _kinect = KinectSensor.GetDefault(); // Recogemos el kinect por defecto
 
@@ -116,7 +121,20 @@ public class CustomGestureManagerExample : MonoBehaviour
         {
             if (AttachedObject != null )
             {
-                cubeColor.material.color = new Color(0, 1, 0);
+                if (!settingsOpened)
+                {
+                    settingsIconAnim.Play("I_InitTopOptions");
+                    settingsPanelAnim.Play("P_Open");
+                    settingsOpened = true;
+                    cubeColor.material.color = new Color(0, 1, 0);
+                } else
+                {
+                    settingsIconAnim.Play("I_OptionsToInit");
+                    settingsPanelAnim.Play("P_Close");
+                    settingsOpened = false;
+                    cubeColor.material.color = new Color(0, 1, 1);
+                }
+                
             }
         } 
         else if (gesture2.Detected == true && gesture2.Confidence > 0.9f)
