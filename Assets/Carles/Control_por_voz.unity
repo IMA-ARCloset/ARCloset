@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -238,8 +238,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 371.36, y: 188.86485}
-  m_SizeDelta: {x: -742.71, y: -377.72485}
+  m_AnchoredPosition: {x: 299.6, y: 211}
+  m_SizeDelta: {x: -599.21, y: -421.99}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &191483048
 MonoBehaviour:
@@ -615,13 +615,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6824c301f8a8a874f96ca7ad69d12a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  words:
+  keywords:
   - opciones
-  - color
+  - tinte
   - "d\xEDa"
   - noche
+  - sonido
   - salir
-  umbral: 1
+  confidence: 2
   settingsIconAnim: {fileID: 47413561}
   settingsPanelAnim: {fileID: 191483050}
 --- !u!4 &1127952638
