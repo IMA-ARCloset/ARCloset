@@ -8,8 +8,6 @@ public class Manager : MonoBehaviour
 
     public GameObject[] l_scenes;
     public GameObject[] l_characters;
-
-    public GameObject[] l_torchs;
     public Light directional_light;
     public Transform day_transform, night_transform;
     public int current_scene = 0, current_character, total_characters;
@@ -18,7 +16,6 @@ public class Manager : MonoBehaviour
     public int changing = 0; //0: escenarios, 1: modelos
 
     private enum escenario { Temple, Village, Egypt }
-    private Coroutine current_coroutine;
 
 
     /*
@@ -34,16 +31,8 @@ public class Manager : MonoBehaviour
         l_scenes = new GameObject[total_scenes]; // +1 xq la Village son dos escenarios con light maps diferentes
         l_characters = GameObject.FindGameObjectsWithTag("Model");
 
-
         total_characters = l_characters.Length;
         current_character = 0;
-
-        foreach (GameObject gO in l_torchs)
-        {
-            ParticleSystem pS = gO.GetComponentInChildren<ParticleSystem>();
-            pS.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        }
-
 
         for(int i=1; i<total_characters; i++)
             l_characters[i].SetActive(false);
@@ -84,7 +73,7 @@ public class Manager : MonoBehaviour
         {
             l_characters[current_character].SetActive(false);
             l_characters[total_characters-1].SetActive(true);
-            current_character = total_characters - 1; 
+            current_character = total_characters - 1;
         }
     }
 
@@ -177,34 +166,6 @@ public class Manager : MonoBehaviour
             day = true;
         }
         transition = false;
-    }
-
-    /*
-        Gestiona las antorchas
-    */
-
-    IEnumerator Manage_torchs(bool random)
-    {
-
-        if (day)
-        {
-            for (int i = 0; i < 6; i += 2)
-            {
-                l_torchs[i].GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting); //Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                l_torchs[i + 1].GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                yield return new WaitForSeconds(1.5f);
-            }
-        }
-        else
-        {
-            if (!random)
-                for (int i = 0; i < 6; i += 2)
-                {
-                    l_torchs[i].GetComponentInChildren<ParticleSystem>().Play(true); //Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                    l_torchs[i + 1].GetComponentInChildren<ParticleSystem>().Play(true);
-                    yield return new WaitForSeconds(1.5f);
-                }
-        }
     }
 
 }
