@@ -27,18 +27,6 @@ public class VoiceControl : MonoBehaviour
         }
     }
 
-    public void Update()
-    {
-        if (Input.GetKeyDown("k"))
-        {
-            manager.Change_character(manager.current_character + 1);
-        }
-        if (Input.GetKeyDown("l"))
-        {
-            manager.Change_character(manager.current_character - 1);
-        }
-    }
-
     private void OnPhraseRecognized(PhraseRecognizedEventArgs args)
     {
         Debug.Log(args.text);
