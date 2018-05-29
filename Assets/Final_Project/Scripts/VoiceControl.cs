@@ -11,24 +11,31 @@ public class VoiceControl : MonoBehaviour
     public ConfidenceLevel confidence = ConfidenceLevel.Low;
     protected KeywordRecognizer recognizer;
 
-    public CustomGestureManagerExample customGesture;
-
-    public Image dayImage, soundImage;
-    public Sprite sunSprite, moonSprite, soundOnSprite, soundOffSprite;
-
-    private bool sound;
+    public Manager manager;
+    public CanvasController canvasController;
 
     // Use this for initialization
     void Start()
     {
         keywords = new string[] { "siguiente", "anterior", "escenario", "modelo", "tinte", "día", "noche", "sonido", "salir" };
-        sound = true;
 
         if (keywords != null)
         {
             recognizer = new KeywordRecognizer(keywords, confidence);
             recognizer.OnPhraseRecognized += OnPhraseRecognized;
             recognizer.Start();
+        }
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown("k"))
+        {
+            manager.Change_character(manager.current_character + 1);
+        }
+        if (Input.GetKeyDown("l"))
+        {
+            manager.Change_character(manager.current_character - 1);
         }
     }
 
@@ -72,6 +79,7 @@ public class VoiceControl : MonoBehaviour
         //         break;
         //     case "salir":
         //         if (customGesture.settingsOpened)
+
         //         {
         //             Debug.Log("Salimos de la aplicación");
         //             Application.Quit();
