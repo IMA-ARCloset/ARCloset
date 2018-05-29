@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/*COMENTARIO DE PRUEBA */
+
 public class Manager : MonoBehaviour
 {
 
