@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
+<<<<<<< HEAD
   tags: []
+=======
+  tags:
+  - Torch
+>>>>>>> parent of 017681c... A ver si no se rompe esto
   layers:
   - Default
   - TransparentFX
