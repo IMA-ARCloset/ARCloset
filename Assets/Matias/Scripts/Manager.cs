@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Manager : MonoBehaviour
@@ -8,19 +9,19 @@ public class Manager : MonoBehaviour
 
     public GameObject[] l_scenes;
     public GameObject[] l_characters;
-
     public GameObject[] l_torchs;
+    public GameObject[] l_flamethrower;
+
     public Light directional_light;
     public Transform day_transform, night_transform;
-    public int current_scene = 0, current_character, total_characters;
+    public int current_scene = 0, current_character = 0, total_characters = 5;
     public float sun_speed = 0.1f;
-    public bool day = true, transition = false, sound = false;
-    public int changing = 0; //0: escenarios, 1: modelos
+    public bool day = true, transition = false;
+
 
     private enum escenario { Temple, Village, Egypt }
-    private Coroutine current_coroutine;
-
-
+    private Coroutine current_coroutine, special_effectCorroutine;
+    private bool special_effect;
     /*
 		Habra alguans escenas que sean diferentes de noche y de dia por eso de los lightMaps
 		y en otras simplemente cambiaremos la orientacion del skybox y pondremos cuatro lamparas
@@ -32,21 +33,28 @@ public class Manager : MonoBehaviour
     private void Start()
     {
         l_scenes = new GameObject[total_scenes]; // +1 xq la Village son dos escenarios con light maps diferentes
-        l_characters = GameObject.FindGameObjectsWithTag("Model");
+        l_characters = new GameObject[total_characters];
 
+        l_torchs = GameObject.FindGameObjectsWithTag("Torch");
+        l_torchs = l_torchs.OrderBy(go => go.name).ToArray();
 
-        total_characters = l_characters.Length;
-        current_character = 0;
+        l_flamethrower = GameObject.FindGameObjectsWithTag("FlameThrower");
+        l_flamethrower = l_flamethrower.OrderBy(go => go.name).ToArray();
+
+        special_effect = false;
 
         foreach (GameObject gO in l_torchs)
         {
-            ParticleSystem pS = gO.GetComponentInChildren<ParticleSystem>();
-            pS.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            gO.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
         }
 
+        foreach (GameObject gO in l_flamethrower)
+        {
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
 
-        for(int i=1; i<total_characters; i++)
-            l_characters[i].SetActive(false);
     }
 
 
@@ -54,6 +62,16 @@ public class Manager : MonoBehaviour
     {
         if (Input.GetKey("n") && !transition)
             Change_dayNight();
+
+        if (Input.GetKey("e") && special_effectCorroutine == null)
+        {
+            Special_effect();
+            Debug.Log("LLAMAMAMOM");
+        }
+
+
+        // if (special_effectCorroutine == null)
+        //     Debug.Log("NO HAY NAH");
     }
 
     public void Change_scene(int n)
@@ -62,32 +80,36 @@ public class Manager : MonoBehaviour
         {
             l_scenes[current_scene].SetActive(false); // Desactivamos la escena en la que nos encontramos
             l_scenes[n].SetActive(true); // Activamos la escena siguiente
-            current_scene = n;
         }
     }
 
     public void Change_character(int n)
     {
-        if (n >= 0 && n < total_characters)
+        if (n > 0 && n < total_characters)
         {
-            l_characters[current_character].SetActive(false); // Desactivamos el modelo en el que nos encontramos
-            l_characters[n].SetActive(true); // Activamos el modelo siguiente
-            current_character = n;
-        }
-        else if (n == total_characters)
-        {
-            l_characters[current_character].SetActive(false);
-            l_characters[0].SetActive(true);
-            current_character = 0;
-        }
-        else if (n < 0)
-        {
-            l_characters[current_character].SetActive(false);
-            l_characters[total_characters-1].SetActive(true);
-            current_character = total_characters - 1; 
+            l_characters[current_character].SetActive(false); // Desactivamos la escena en la que nos encontramos
+            l_characters[n].SetActive(true); // Activamos la escena siguiente
         }
     }
 
+    public void Special_effect()
+    {
+        switch (current_scene)
+        {
+            case (int)escenario.Temple:
+                if (special_effectCorroutine == null)
+                    special_effectCorroutine = StartCoroutine(Temple_specialEffect());
+                break;
+
+            case (int)escenario.Village:
+
+                break;
+
+            case (int)escenario.Egypt:
+
+                break;
+        }
+    }
 
     public void Change_dayNight()
     {
@@ -108,9 +130,6 @@ public class Manager : MonoBehaviour
                 case (int)escenario.Egypt:
 
                     break;
-
-                default:
-                    break;
             }
 
             return;
@@ -130,9 +149,6 @@ public class Manager : MonoBehaviour
             case (int)escenario.Egypt:
 
                 break;
-
-            default:
-                break;
         }
 
     }
@@ -144,12 +160,29 @@ public class Manager : MonoBehaviour
     public void Temple_nightfall()
     {
         //directional_light.transform.rotation = Quaternion.Slerp(day_transform.rotation, night_transform.rotation, Time.time * sun_speed);
-        StartCoroutine(Transition());
+        if (current_coroutine == null)
+            current_coroutine = StartCoroutine(Transition());
+        else
+        {
+            StopCoroutine(current_coroutine);
+            current_coroutine = StartCoroutine(Transition());
+        }
+
+
     }
 
     public void Temple_dawn()
     {
-        StartCoroutine(Transition());
+        if (current_coroutine == null)
+        {
+            current_coroutine = StartCoroutine(Transition());
+        }
+        else
+        {
+            StopCoroutine(current_coroutine);
+            current_coroutine = StartCoroutine(Transition());
+        }
+
     }
 
     /*
@@ -159,22 +192,23 @@ public class Manager : MonoBehaviour
     {
         if (day) // Anochece
         {
-            while (directional_light.transform.rotation != night_transform.rotation)
+            for (int i = 0; i < 90; i++) //while (directional_light.transform.rotation != night_transform.rotation)
             {
-                directional_light.transform.rotation = Quaternion.Slerp(day_transform.rotation, night_transform.rotation, Time.time * sun_speed);
-                yield return null;
-
+                directional_light.transform.Rotate(new Vector3(-0.5f, 0, 0), Space.World);
+                yield return new WaitForSeconds(0.05f);
             }
             day = false;
+            StartCoroutine(Manage_torchs(false));
         }
         else //  Amanece
         {
-            while (directional_light.transform.rotation != day_transform.rotation)
+            for (int i = 0; i < 90; i++) //while (directional_light.transform.rotation != day_transform.rotation)
             {
-                directional_light.transform.rotation = Quaternion.Slerp(day_transform.rotation, night_transform.rotation, Time.time * sun_speed);
-                yield return null;
+                directional_light.transform.Rotate(new Vector3(0.5f, 0, 0), Space.World);
+                yield return new WaitForSeconds(0.05f);
             }
             day = true;
+            StartCoroutine(Manage_torchs(false));
         }
         transition = false;
     }
@@ -182,7 +216,6 @@ public class Manager : MonoBehaviour
     /*
         Gestiona las antorchas
     */
-
     IEnumerator Manage_torchs(bool random)
     {
 
@@ -205,6 +238,31 @@ public class Manager : MonoBehaviour
                     yield return new WaitForSeconds(1.5f);
                 }
         }
+    }
+
+    /* 
+        De aqui para abajo todos los efectos especiales
+    */
+
+    IEnumerator Temple_specialEffect()
+    {
+        foreach (GameObject gO in l_flamethrower)
+        {
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Play(true);
+        }
+
+        yield return new WaitForSeconds(5f);
+
+        foreach (GameObject gO in l_flamethrower)
+        {
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        special_effectCorroutine = null;        
     }
 
 }

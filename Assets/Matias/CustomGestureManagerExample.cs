@@ -10,7 +10,12 @@ public class CustomGestureManagerExample : MonoBehaviour
     VisualGestureBuilderFrameSource _gestureFrameSource; // stream 
     VisualGestureBuilderFrameReader _gestureFrameReader; // stream
     KinectSensor _kinect;
-    Gesture _gesture1, _gesture2;
+
+    Gesture _salute;
+    Gesture _saluteProgress;
+    Gesture _gesture1, _gesture2, _gesture3, _gesture4;
+    //Gesture _gesture1Progress, _gesture2Progress, _gesture3Progress, _gesture4Progress;
+
     DiscreteGestureResult gesture1, gesture2, gesture3, gesture4;
 
     public CanvasController canvasController;
@@ -31,7 +36,7 @@ public class CustomGestureManagerExample : MonoBehaviour
         _gestureFrameSource = VisualGestureBuilderFrameSource.Create(_kinect, 0); // Array de gestos ????
 
         if (_gestureDatabase != null)
-            Debug.Log("Base de datos cargada con éxito");
+            Debug.Log("Base de datos cargada con ï¿½xito");
         else
             Debug.LogError("Error al cargar la base de datos");
         /*
