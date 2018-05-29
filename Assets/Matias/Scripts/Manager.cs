@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-/*COMENTARIO DE PRUEBA */
-
 public class Manager : MonoBehaviour
 {
 
@@ -14,10 +12,11 @@ public class Manager : MonoBehaviour
     public GameObject[] l_TempleTorchs;
     public GameObject[] l_EgyptTorchs;
     public GameObject[] l_flamethrower;
+    public GameObject[] l_waterfalls;
 
     public Light directional_light;
     public Transform day_transform, night_transform;
-    public int current_scene = 0, current_character = 0, total_characters = 5;
+    public int current_scene = 2, current_character = 0, total_characters = 5;
     public float sun_speed = 0.1f;
     public bool day = true, transition = false;
 
@@ -46,9 +45,16 @@ public class Manager : MonoBehaviour
 
         l_EgyptTorchs = GameObject.FindGameObjectsWithTag("EgyptTorch");
 
+        l_waterfalls = GameObject.FindGameObjectsWithTag("Waterfalls");
+
         special_effect = false;
 
         foreach (GameObject gO in l_TempleTorchs)
+        {
+            gO.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        foreach (GameObject gO in l_EgyptTorchs)
         {
             gO.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
         }
@@ -60,6 +66,12 @@ public class Manager : MonoBehaviour
                 p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         }
 
+        foreach (GameObject gO in l_waterfalls)
+        {
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
     }
 
 
@@ -111,7 +123,8 @@ public class Manager : MonoBehaviour
                 break;
 
             case (int)escenario.Egypt:
-
+                if (special_effectCorroutine == null)
+                    special_effectCorroutine = StartCoroutine(Egypt_specialEffect());
                 break;
         }
     }
@@ -162,7 +175,7 @@ public class Manager : MonoBehaviour
 		FUNCIONES PARA GESTIONAR EL CICLO DIA NOCHE
 	*/
 
-    
+
     #region 
     //templo
     public void Temple_nightfall()
@@ -175,7 +188,7 @@ public class Manager : MonoBehaviour
     {
         StartCoroutine(Transition());
     }
-    
+
     //Egipto
     public void Egypt_nightfall()
     {
@@ -266,7 +279,7 @@ public class Manager : MonoBehaviour
             foreach (GameObject t in l_EgyptTorchs)
             {
                 t.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.3f);
             }
         }
         else
@@ -274,7 +287,7 @@ public class Manager : MonoBehaviour
             foreach (GameObject t in l_EgyptTorchs)
             {
                 t.GetComponentInChildren<ParticleSystem>().Play(true);
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.2f);
             }
         }
     }
@@ -295,6 +308,28 @@ public class Manager : MonoBehaviour
         yield return new WaitForSeconds(5f);
 
         foreach (GameObject gO in l_flamethrower)
+        {
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        special_effectCorroutine = null;
+    }
+
+
+    IEnumerator Egypt_specialEffect()
+    {
+        foreach (GameObject gO in l_waterfalls)
+        {
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Play(true);
+        }
+
+        yield return new WaitForSeconds(5f);
+
+        foreach (GameObject gO in l_waterfalls)
         {
             var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
             foreach (ParticleSystem p in l_aux)
