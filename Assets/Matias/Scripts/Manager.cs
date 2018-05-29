@@ -9,7 +9,8 @@ public class Manager : MonoBehaviour
 
     public GameObject[] l_scenes;
     public GameObject[] l_characters;
-    public GameObject[] l_torchs;
+    public GameObject[] l_TempleTorchs;
+    public GameObject[] l_EgyptTorchs;
     public GameObject[] l_flamethrower;
 
     public Light directional_light;
@@ -35,15 +36,17 @@ public class Manager : MonoBehaviour
         l_scenes = new GameObject[total_scenes]; // +1 xq la Village son dos escenarios con light maps diferentes
         l_characters = new GameObject[total_characters];
 
-        l_torchs = GameObject.FindGameObjectsWithTag("Torch");
-        l_torchs = l_torchs.OrderBy(go => go.name).ToArray();
+        l_TempleTorchs = GameObject.FindGameObjectsWithTag("Torch");
+        l_TempleTorchs = l_TempleTorchs.OrderBy(go => go.name).ToArray();
 
         l_flamethrower = GameObject.FindGameObjectsWithTag("FlameThrower");
         l_flamethrower = l_flamethrower.OrderBy(go => go.name).ToArray();
 
+        l_EgyptTorchs = GameObject.FindGameObjectsWithTag("EgyptTorch");
+
         special_effect = false;
 
-        foreach (GameObject gO in l_torchs)
+        foreach (GameObject gO in l_TempleTorchs)
         {
             gO.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
         }
@@ -128,7 +131,7 @@ public class Manager : MonoBehaviour
                     break;
 
                 case (int)escenario.Egypt:
-
+                    Egypt_nightfall();
                     break;
             }
 
@@ -147,44 +150,41 @@ public class Manager : MonoBehaviour
                 break;
 
             case (int)escenario.Egypt:
-
+                Egypt_dawn();
                 break;
         }
 
     }
 
     /*
-		FUNCIONES PARA HACER DE NOCHE EL MUNDO 
+		FUNCIONES PARA GESTIONAR EL CICLO DIA NOCHE
 	*/
 
+    
+    #region 
+    //templo
     public void Temple_nightfall()
     {
         //directional_light.transform.rotation = Quaternion.Slerp(day_transform.rotation, night_transform.rotation, Time.time * sun_speed);
-        if (current_coroutine == null)
-            current_coroutine = StartCoroutine(Transition());
-        else
-        {
-            StopCoroutine(current_coroutine);
-            current_coroutine = StartCoroutine(Transition());
-        }
-
-
+        StartCoroutine(Transition());
     }
 
     public void Temple_dawn()
     {
-        if (current_coroutine == null)
-        {
-            current_coroutine = StartCoroutine(Transition());
-        }
-        else
-        {
-            StopCoroutine(current_coroutine);
-            current_coroutine = StartCoroutine(Transition());
-        }
-
+        StartCoroutine(Transition());
+    }
+    
+    //Egipto
+    public void Egypt_nightfall()
+    {
+        StartCoroutine(Transition());
     }
 
+    public void Egypt_dawn()
+    {
+        StartCoroutine(Transition());
+    }
+    #endregion
     /*
         Gestiona el ciclo dia noche
     */
@@ -198,7 +198,7 @@ public class Manager : MonoBehaviour
                 yield return new WaitForSeconds(0.05f);
             }
             day = false;
-            StartCoroutine(Manage_torchs(false));
+            Manage_illumination();
         }
         else //  Amanece
         {
@@ -208,35 +208,72 @@ public class Manager : MonoBehaviour
                 yield return new WaitForSeconds(0.05f);
             }
             day = true;
-            StartCoroutine(Manage_torchs(false));
+            Manage_illumination();
         }
         transition = false;
+    }
+
+    void Manage_illumination()
+    {
+        switch (current_scene)
+        {
+            case (int)escenario.Temple:
+                StartCoroutine(Manage_templeTorchs());
+                break;
+
+            case (int)escenario.Egypt:
+                StartCoroutine(Manage_EgyptTorchs());
+                break;
+
+            case (int)escenario.Village:
+                break;
+        }
     }
 
     /*
         Gestiona las antorchas
     */
-    IEnumerator Manage_torchs(bool random)
+    IEnumerator Manage_templeTorchs()
     {
 
         if (day)
         {
             for (int i = 0; i < 6; i += 2)
             {
-                l_torchs[i].GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting); //Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                l_torchs[i + 1].GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                l_TempleTorchs[i].GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting); //Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                l_TempleTorchs[i + 1].GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
                 yield return new WaitForSeconds(1.5f);
             }
         }
         else
         {
-            if (!random)
-                for (int i = 0; i < 6; i += 2)
-                {
-                    l_torchs[i].GetComponentInChildren<ParticleSystem>().Play(true); //Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                    l_torchs[i + 1].GetComponentInChildren<ParticleSystem>().Play(true);
-                    yield return new WaitForSeconds(1.5f);
-                }
+            for (int i = 0; i < 6; i += 2)
+            {
+                l_TempleTorchs[i].GetComponentInChildren<ParticleSystem>().Play(true); //Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                l_TempleTorchs[i + 1].GetComponentInChildren<ParticleSystem>().Play(true);
+                yield return new WaitForSeconds(1.5f);
+            }
+        }
+    }
+
+    IEnumerator Manage_EgyptTorchs()
+    {
+
+        if (day)
+        {
+            foreach (GameObject t in l_EgyptTorchs)
+            {
+                t.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+        else
+        {
+            foreach (GameObject t in l_EgyptTorchs)
+            {
+                t.GetComponentInChildren<ParticleSystem>().Play(true);
+                yield return new WaitForSeconds(0.3f);
+            }
         }
     }
 
@@ -262,7 +299,7 @@ public class Manager : MonoBehaviour
                 p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         }
 
-        special_effectCorroutine = null;        
+        special_effectCorroutine = null;
     }
 
 }
