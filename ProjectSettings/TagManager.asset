@@ -6,10 +6,13 @@ TagManager:
   tags:
 
   - Torch
+<<<<<<< HEAD
   - FlameThrower
 
   - Model
 
+=======
+>>>>>>> parent of 017681c... A ver si no se rompe esto
   layers:
   - Default
   - TransparentFX
