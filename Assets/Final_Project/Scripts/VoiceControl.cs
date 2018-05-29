@@ -11,24 +11,31 @@ public class VoiceControl : MonoBehaviour
     public ConfidenceLevel confidence = ConfidenceLevel.Low;
     protected KeywordRecognizer recognizer;
 
-    public CustomGestureManagerExample customGesture;
-
-    public Image dayImage, soundImage;
-    public Sprite sunSprite, moonSprite, soundOnSprite, soundOffSprite;
-
-    private bool sound;
+    public Manager manager;
+    public CanvasController canvasController;
 
     // Use this for initialization
     void Start()
     {
         keywords = new string[] { "siguiente", "anterior", "escenario", "modelo", "tinte", "día", "noche", "sonido", "salir" };
-        sound = true;
 
         if (keywords != null)
         {
             recognizer = new KeywordRecognizer(keywords, confidence);
             recognizer.OnPhraseRecognized += OnPhraseRecognized;
             recognizer.Start();
+        }
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown("k"))
+        {
+            manager.Change_character(manager.current_character + 1);
+        }
+        if (Input.GetKeyDown("l"))
+        {
+            manager.Change_character(manager.current_character - 1);
         }
     }
 
@@ -39,39 +46,47 @@ public class VoiceControl : MonoBehaviour
         switch (args.text)
         {
             case "siguiente":
+                if (manager.changing == 1)
+                {
+                    manager.Change_character(manager.current_character + 1);
+                }
                 break;
             case "anterior":
+                if (manager.changing == 1)
+                {
+                    manager.Change_character(manager.current_character - 1);
+                }
                 break;
             case "escenario":
+                manager.changing = 0;
                 break;
             case "modelo":
-                break;
-            case "tinte":
+                manager.changing = 1;
                 break;
             case "día":
-                if (customGesture.settingsOpened)
+                if (canvasController.settingsOpened)
                 {
-                    dayImage.sprite = sunSprite;
+                    canvasController.dayImage.sprite = canvasController.sunSprite;
                 }
                 break;
             case "noche":
-                if (customGesture.settingsOpened)
+                if (canvasController.settingsOpened)
                 {
-                    dayImage.sprite = moonSprite;
+                    canvasController.dayImage.sprite = canvasController.moonSprite;
                 }
                 break;
             case "sonido":
-                if (customGesture.settingsOpened)
+                if (canvasController.settingsOpened)
                 {
-                    sound = !sound;
-                    if (sound)
-                        soundImage.sprite = soundOnSprite;
+                    manager.sound = !manager.sound;
+                    if (manager.sound)
+                        canvasController.soundImage.sprite = canvasController.soundOnSprite;
                     else
-                        soundImage.sprite = soundOffSprite;
+                        canvasController.soundImage.sprite = canvasController.soundOffSprite;
                 }
                 break;
             case "salir":
-                if (customGesture.settingsOpened)
+                if (canvasController.settingsOpened)
                 {
                     Debug.Log("Salimos de la aplicación");
                     Application.Quit();
