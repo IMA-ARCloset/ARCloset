@@ -36,47 +36,47 @@ public class VoiceControl : MonoBehaviour
     {
         Debug.Log(args.text);
 
-        switch (args.text)
-        {
-            case "siguiente":
-                break;
-            case "anterior":
-                break;
-            case "escenario":
-                break;
-            case "modelo":
-                break;
-            case "tinte":
-                break;
-            case "día":
-                if (customGesture.settingsOpened)
-                {
-                    dayImage.sprite = sunSprite;
-                }
-                break;
-            case "noche":
-                if (customGesture.settingsOpened)
-                {
-                    dayImage.sprite = moonSprite;
-                }
-                break;
-            case "sonido":
-                if (customGesture.settingsOpened)
-                {
-                    sound = !sound;
-                    if (sound)
-                        soundImage.sprite = soundOnSprite;
-                    else
-                        soundImage.sprite = soundOffSprite;
-                }
-                break;
-            case "salir":
-                if (customGesture.settingsOpened)
-                {
-                    Debug.Log("Salimos de la aplicación");
-                    Application.Quit();
-                }
-                break;
-        }
+        // switch (args.text)
+        // {
+        //     case "siguiente":
+        //         break;
+        //     case "anterior":
+        //         break;
+        //     case "escenario":
+        //         break;
+        //     case "modelo":
+        //         break;
+        //     case "tinte":
+        //         break;
+        //     case "día":
+        //         if (customGesture.settingsOpened)
+        //         {
+        //             dayImage.sprite = sunSprite;
+        //         }
+        //         break;
+        //     case "noche":
+        //         if (customGesture.settingsOpened)
+        //         {
+        //             dayImage.sprite = moonSprite;
+        //         }
+        //         break;
+        //     case "sonido":
+        //         if (customGesture.settingsOpened)
+        //         {
+        //             sound = !sound;
+        //             if (sound)
+        //                 soundImage.sprite = soundOnSprite;
+        //             else
+        //                 soundImage.sprite = soundOffSprite;
+        //         }
+        //         break;
+        //     case "salir":
+        //         if (customGesture.settingsOpened)
+        //         {
+        //             Debug.Log("Salimos de la aplicación");
+        //             Application.Quit();
+        //         }
+        //         break;
+        // }
     }
 }

@@ -13,7 +13,7 @@ public class CustomGestureManagerExample : MonoBehaviour
     Gesture _salute;
     Gesture _saluteProgress;
     Gesture _gesture1, _gesture2, _gesture3, _gesture4;
-    Gesture _gesture1Progress, _gesture2Progress, _gesture3Progress, _gesture4Progress;
+    //Gesture _gesture1Progress, _gesture2Progress, _gesture3Progress, _gesture4Progress;
     DiscreteGestureResult gesture1, gesture2, gesture3, gesture4;
 
     Renderer cubeColor;
