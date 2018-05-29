@@ -43,55 +43,55 @@ public class VoiceControl : MonoBehaviour
     {
         Debug.Log(args.text);
 
-        switch (args.text)
-        {
-            case "siguiente":
-                if (manager.changing == 1)
-                {
-                    manager.Change_character(manager.current_character + 1);
-                }
-                break;
-            case "anterior":
-                if (manager.changing == 1)
-                {
-                    manager.Change_character(manager.current_character - 1);
-                }
-                break;
-            case "escenario":
-                manager.changing = 0;
-                break;
-            case "modelo":
-                manager.changing = 1;
-                break;
-            case "día":
-                if (canvasController.settingsOpened)
-                {
-                    canvasController.dayImage.sprite = canvasController.sunSprite;
-                }
-                break;
-            case "noche":
-                if (canvasController.settingsOpened)
-                {
-                    canvasController.dayImage.sprite = canvasController.moonSprite;
-                }
-                break;
-            case "sonido":
-                if (canvasController.settingsOpened)
-                {
-                    manager.sound = !manager.sound;
-                    if (manager.sound)
-                        canvasController.soundImage.sprite = canvasController.soundOnSprite;
-                    else
-                        canvasController.soundImage.sprite = canvasController.soundOffSprite;
-                }
-                break;
-            case "salir":
-                if (canvasController.settingsOpened)
-                {
-                    Debug.Log("Salimos de la aplicación");
-                    Application.Quit();
-                }
-                break;
-        }
+        // switch (args.text)
+        // {
+        //     case "siguiente":
+        //         if (manager.changing == 1)
+        //         {
+        //             manager.Change_character(manager.current_character + 1);
+        //         }
+        //         break;
+        //     case "anterior":
+        //         if (manager.changing == 1)
+        //         {
+        //             manager.Change_character(manager.current_character - 1);
+        //         }
+        //         break;
+        //     case "escenario":
+        //         manager.changing = 0;
+        //         break;
+        //     case "modelo":
+        //         manager.changing = 1;
+        //         break;
+        //     case "día":
+        //         if (canvasController.settingsOpened)
+        //         {
+        //             canvasController.dayImage.sprite = canvasController.sunSprite;
+        //         }
+        //         break;
+        //     case "noche":
+        //         if (canvasController.settingsOpened)
+        //         {
+        //             canvasController.dayImage.sprite = canvasController.moonSprite;
+        //         }
+        //         break;
+        //     case "sonido":
+        //         if (canvasController.settingsOpened)
+        //         {
+        //             manager.sound = !manager.sound;
+        //             if (manager.sound)
+        //                 canvasController.soundImage.sprite = canvasController.soundOnSprite;
+        //             else
+        //                 canvasController.soundImage.sprite = canvasController.soundOffSprite;
+        //         }
+        //         break;
+        //     case "salir":
+        //         if (canvasController.settingsOpened)
+        //         {
+        //             Debug.Log("Salimos de la aplicación");
+        //             Application.Quit();
+        //         }
+        //         break;
+        // }
     }
 }
