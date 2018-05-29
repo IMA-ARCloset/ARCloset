@@ -10,6 +10,8 @@ public class Manager : MonoBehaviour
     public GameObject[] l_scenes;
     public GameObject[] l_characters;
     public GameObject[] l_torchs;
+    public GameObject[] l_flamethrower;
+
     public Light directional_light;
     public Transform day_transform, night_transform;
     public int current_scene = 0, current_character = 0, total_characters = 5;
@@ -18,8 +20,8 @@ public class Manager : MonoBehaviour
 
 
     private enum escenario { Temple, Village, Egypt }
-    private Coroutine current_coroutine;
-
+    private Coroutine current_coroutine, special_effectCorroutine;
+    private bool special_effect;
     /*
 		Habra alguans escenas que sean diferentes de noche y de dia por eso de los lightMaps
 		y en otras simplemente cambiaremos la orientacion del skybox y pondremos cuatro lamparas
@@ -36,10 +38,21 @@ public class Manager : MonoBehaviour
         l_torchs = GameObject.FindGameObjectsWithTag("Torch");
         l_torchs = l_torchs.OrderBy(go => go.name).ToArray();
 
+        l_flamethrower = GameObject.FindGameObjectsWithTag("FlameThrower");
+        l_flamethrower = l_flamethrower.OrderBy(go => go.name).ToArray();
+
+        special_effect = false;
+
         foreach (GameObject gO in l_torchs)
         {
-            ParticleSystem pS = gO.GetComponentInChildren<ParticleSystem>();
-            pS.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            gO.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        foreach (GameObject gO in l_flamethrower)
+        {
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         }
 
     }
@@ -49,6 +62,16 @@ public class Manager : MonoBehaviour
     {
         if (Input.GetKey("n") && !transition)
             Change_dayNight();
+
+        if (Input.GetKey("e") && special_effectCorroutine == null)
+        {
+            Special_effect();
+            Debug.Log("LLAMAMAMOM");
+        }
+
+
+        // if (special_effectCorroutine == null)
+        //     Debug.Log("NO HAY NAH");
     }
 
     public void Change_scene(int n)
@@ -74,7 +97,8 @@ public class Manager : MonoBehaviour
         switch (current_scene)
         {
             case (int)escenario.Temple:
-
+                if (special_effectCorroutine == null)
+                    special_effectCorroutine = StartCoroutine(Temple_specialEffect());
                 break;
 
             case (int)escenario.Village:
@@ -192,7 +216,6 @@ public class Manager : MonoBehaviour
     /*
         Gestiona las antorchas
     */
-
     IEnumerator Manage_torchs(bool random)
     {
 
@@ -215,6 +238,31 @@ public class Manager : MonoBehaviour
                     yield return new WaitForSeconds(1.5f);
                 }
         }
+    }
+
+    /* 
+        De aqui para abajo todos los efectos especiales
+    */
+
+    IEnumerator Temple_specialEffect()
+    {
+        foreach (GameObject gO in l_flamethrower)
+        {
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Play(true);
+        }
+
+        yield return new WaitForSeconds(5f);
+
+        foreach (GameObject gO in l_flamethrower)
+        {
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        special_effectCorroutine = null;        
     }
 
 }
