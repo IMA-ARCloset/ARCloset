@@ -21,7 +21,7 @@ public class CustomGestureManagerExample : MonoBehaviour
     public Animator settingsIconAnim;
     public Animator settingsPanelAnim;
 
-    bool settingsOpened;
+    public bool settingsOpened, transition;
 
     public void SetTrackingId(ulong id)
     {
@@ -42,6 +42,7 @@ public class CustomGestureManagerExample : MonoBehaviour
         }
 
         settingsOpened = false;
+        transition = false;
 
         _kinect = KinectSensor.GetDefault(); // Recogemos el kinect por defecto
 
@@ -49,9 +50,9 @@ public class CustomGestureManagerExample : MonoBehaviour
         _gestureFrameSource = VisualGestureBuilderFrameSource.Create(_kinect, 0); // Array de gestos ????
 
         if (_gestureDatabase != null)
-            Debug.Log("TENEMOS LA BASE DE DATOS NEEEEEN");
+            Debug.Log("Base de datos cargada con éxito");
         else
-            Debug.LogError("NO TENEMOS LA BASE DE DATOS");
+            Debug.LogError("Error al cargar la base de datos");
         /*
             Anyade los gestos
             TODO: DEFINIR LOS NOMBRES DE ESTOS GESTOS DE MIERDA
@@ -72,7 +73,6 @@ public class CustomGestureManagerExample : MonoBehaviour
                     Debug.Log(gesture.Name);
                 break;
             }
-
         }
 
         _gestureFrameReader = _gestureFrameSource.OpenReader();
@@ -119,10 +119,11 @@ public class CustomGestureManagerExample : MonoBehaviour
     {
         if (gesture1.Detected == true && gesture1.Confidence > 0.9f)
         {
-            if (AttachedObject != null )
+            if (!transition)
             {
                 if (!settingsOpened)
                 {
+<<<<<<< HEAD
                     settingsIconAnim.Play("I_InitTopOptions");
                     settingsPanelAnim.Play("P_Open");
                     settingsOpened = true;
@@ -135,6 +136,20 @@ public class CustomGestureManagerExample : MonoBehaviour
                     cubeColor.material.color = new Color(0, 1, 1);
                 }
                 
+=======
+                    transition = true;
+                    settingsIconAnim.Play("I_InitTopOptions");
+                    settingsPanelAnim.Play("P_Open");
+                    StartCoroutine(WaitTransition());
+                }
+                else
+                {
+                    transition = true;
+                    settingsIconAnim.Play("I_OptionsToInit");
+                    settingsPanelAnim.Play("P_Close");
+                    StartCoroutine(WaitTransition());
+                }
+>>>>>>> ebc018ce0a1a2b8f1eff538816b5fdf5d0128207
             }
         } 
         else if (gesture2.Detected == true && gesture2.Confidence > 0.9f)
@@ -146,5 +161,12 @@ public class CustomGestureManagerExample : MonoBehaviour
         } 
         else
             cubeColor.material.color = new Color(1,1,1);
+    }
+
+    IEnumerator WaitTransition()
+    {
+        yield return new WaitForSeconds(2);
+        transition = false;
+        settingsOpened = !settingsOpened;
     }
 }
