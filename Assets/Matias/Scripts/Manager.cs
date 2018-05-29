@@ -14,8 +14,9 @@ public class Manager : MonoBehaviour
     public float sun_speed = 0.1f;
     public bool day = true, transition = false;
 
-    private enum escenario { Temple, Village, Egypt }
 
+    private enum escenario { Temple, Village, Egypt }
+    private Coroutine current_coroutine;
 
     /*
 		Habra alguans escenas que sean diferentes de noche y de dia por eso de los lightMaps
@@ -29,6 +30,7 @@ public class Manager : MonoBehaviour
     {
         l_scenes = new GameObject[total_scenes]; // +1 xq la Village son dos escenarios con light maps diferentes
         l_characters = new GameObject[total_characters];
+        current_coroutine = null;
     }
 
 
@@ -112,12 +114,24 @@ public class Manager : MonoBehaviour
     public void Temple_nightfall()
     {
         //directional_light.transform.rotation = Quaternion.Slerp(day_transform.rotation, night_transform.rotation, Time.time * sun_speed);
-        StartCoroutine(Transition());
+        if (current_coroutine == null)
+            current_coroutine = StartCoroutine(Transition());
+        else
+        {
+            StopCoroutine(current_coroutine);
+            current_coroutine = StartCoroutine(Transition());
+        }
     }
 
     public void Temple_dawn()
     {
-        StartCoroutine(Transition());
+        if (current_coroutine == null)
+            current_coroutine = StartCoroutine(Transition());
+        else
+        {
+            StopCoroutine(current_coroutine);
+            current_coroutine = StartCoroutine(Transition());
+        }
     }
 
     /*
@@ -127,20 +141,24 @@ public class Manager : MonoBehaviour
     {
         if (day) // Anochece
         {
-            while (directional_light.transform.rotation != night_transform.rotation)
+            for (int i = 0; i < 90; i++) //while (directional_light.transform.rotation != night_transform.rotation)
             {
-                directional_light.transform.rotation = Quaternion.Slerp(day_transform.rotation, night_transform.rotation, Time.time * sun_speed);
-                yield return null;
+                directional_light.transform.Rotate(new Vector3(-0.5f, 0, 0), Space.World);
+                // directional_light.transform.rotation = Quaternion.Slerp(directional_light.transform.rotation, night_transform.rotation, Time.time * sun_speed);
+                // yield return null;
+                yield return new WaitForSeconds(0.05f);
 
             }
             day = false;
         }
         else //  Amanece
         {
-            while (directional_light.transform.rotation != day_transform.rotation)
+            for (int i = 0; i < 90; i++) //while (directional_light.transform.rotation != day_transform.rotation)
             {
-                directional_light.transform.rotation = Quaternion.Slerp(day_transform.rotation, night_transform.rotation, Time.time * sun_speed);
-                yield return null;
+                directional_light.transform.Rotate(new Vector3(0.5f, 0, 0), Space.World);
+                // directional_light.transform.rotation = Quaternion.Slerp(directional_light.transform.rotation, day_transform.rotation, Time.time * sun_speed);
+                // yield return null;
+                yield return new WaitForSeconds(0.05f);
             }
             day = true;
         }
