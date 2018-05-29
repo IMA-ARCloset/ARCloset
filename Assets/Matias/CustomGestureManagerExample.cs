@@ -117,24 +117,24 @@ public class CustomGestureManagerExample : MonoBehaviour
 
     void Do_things(VisualGestureBuilderFrame frame)
     {
-        if (gesture1.Detected == true && gesture1.Confidence > 0.9f)
+        if (gesture1.Detected == true)
         {
             if (AttachedObject != null )
             {
-                if (!settingsOpened)
-                {
-                    settingsIconAnim.Play("I_InitTopOptions");
-                    settingsPanelAnim.Play("P_Open");
-                    settingsOpened = true;
-                    cubeColor.material.color = new Color(0, 1, 0);
-                } else
-                {
-                    settingsIconAnim.Play("I_OptionsToInit");
-                    settingsPanelAnim.Play("P_Close");
-                    settingsOpened = false;
-                    cubeColor.material.color = new Color(0, 1, 1);
-                }
-                
+                //if (!settingsOpened)
+                //{
+                //    settingsIconAnim.Play("I_InitTopOptions");
+                //    settingsPanelAnim.Play("P_Open");
+                //    settingsOpened = true;
+                //    cubeColor.material.color = new Color(0, 1, 0);
+                //} else
+                //{
+                //    settingsIconAnim.Play("I_OptionsToInit");
+                //    settingsPanelAnim.Play("P_Close");
+                //    settingsOpened = false;
+                //    cubeColor.material.color = new Color(0, 1, 1);
+                //}
+                cubeColor.material.color = new Color(0, 1, 0);
             }
         } 
         else if (gesture2.Detected == true && gesture2.Confidence > 0.9f)
