@@ -5,21 +5,25 @@ using UnityEngine.UI;
 public class CanvasController : MonoBehaviour {
 
     public Manager manager;
-    public Image dayImage, soundImage, anteriorImage, siguienteImage;
+    public GameObject startPanel, gamePanel;
+    public Image dayImage, soundImage;
     public Sprite sunSprite, moonSprite, soundOnSprite, soundOffSprite;
     public Animator settingsIconAnim, settingsPanelAnim;
-    public bool settingsOpened, transition;
+    public bool settingsOpened, transition, start;
 
     // Use this for initialization
     void Start() {
+        startPanel.SetActive(true);
         settingsOpened = false;
         transition = false;
+        start = true;
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    public void GoToApp()
+    {
+        StartCoroutine(FadeOut(0.5f, startPanel, startPanel.GetComponent<CanvasGroup>()));
+        start = false;
+    }
 
     public void OptionGesture()
     {
@@ -47,5 +51,21 @@ public class CanvasController : MonoBehaviour {
         yield return new WaitForSeconds(2);
         transition = false;
         settingsOpened = !settingsOpened;
+    }
+
+    IEnumerator FadeOut(float duration, GameObject screen, CanvasGroup canvasGroup)
+    {
+        float time = 0.0f;
+
+        while (time <= duration)
+        {
+            time += Time.deltaTime;
+            canvasGroup.alpha = 1 - (time / duration);
+            yield return null;
+        }
+
+        screen.SetActive(false);
+        canvasGroup.alpha = 0.0f;
+        yield return null;
     }
 }

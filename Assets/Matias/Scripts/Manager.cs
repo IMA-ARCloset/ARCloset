@@ -40,7 +40,7 @@ public class Manager : MonoBehaviour
         special_effect = false;
 
         for (int i = 0; i < total_scenes; i++)
-            if(i != current_scene)
+            if (i != current_scene)
                 l_scenes[i].SetActive(false);
 
         for (int i = 0; i < total_characters; i++)
@@ -53,10 +53,13 @@ public class Manager : MonoBehaviour
         if (Input.GetKeyDown("n") && !transition)
             Change_dayNight();
 
-        if (Input.GetKey("e") && special_effectCorroutine == null)
+        if (Input.GetKeyDown("k"))
+            Change_scene(current_scene + 1);
+
+        if (Input.GetKeyDown("e") && special_effectCorroutine == null)
         {
-            Special_effect();
             Debug.Log("LLAMAMAMOM");
+            Special_effect();
         }
     }
 
