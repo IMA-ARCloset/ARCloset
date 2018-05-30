@@ -8,7 +8,7 @@ public class VoiceController : MonoBehaviour
 {
     //Reconocimiento por voz
     public string[] keywords;
-    public ConfidenceLevel confidence = ConfidenceLevel.Low;
+    public ConfidenceLevel confidence = ConfidenceLevel.Medium;
     protected KeywordRecognizer recognizer;
 
     public Manager manager;
@@ -17,7 +17,7 @@ public class VoiceController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        keywords = new string[] { "continuar", "siguiente", "anterior", "escenario", "modelo", "tinte", "día", "noche", "sonido", "salir" };
+        keywords = new string[] { "ayuda", "continuar", "siguiente", "anterior", "escenario", "modelo", "día", "noche", "sonido", "salir" };
 
         if (keywords != null)
         {
@@ -31,13 +31,16 @@ public class VoiceController : MonoBehaviour
     {
         Debug.Log(args.text);
 
-        if (canvasController.start && args.text == "continuar")
+        if (canvasController.help && args.text == "continuar")
             canvasController.GoToApp();
 
-        if (!canvasController.start)
+        if (!canvasController.help)
         {
             switch (args.text)
             {
+                case "ayuda":
+                    canvasController.Help();
+                break;
                 case "siguiente":
                     if (manager.changing == 1)
                         manager.Change_character(manager.current_character + 1);

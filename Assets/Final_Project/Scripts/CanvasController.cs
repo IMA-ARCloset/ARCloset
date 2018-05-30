@@ -5,24 +5,30 @@ using UnityEngine.UI;
 public class CanvasController : MonoBehaviour {
 
     public Manager manager;
-    public GameObject startPanel, gamePanel;
+    public GameObject helpPanel, gamePanel;
     public Image dayImage, soundImage;
     public Sprite sunSprite, moonSprite, soundOnSprite, soundOffSprite;
     public Animator settingsIconAnim, settingsPanelAnim;
-    public bool settingsOpened, transition, start;
+    public bool settingsOpened, transition, help;
 
     // Use this for initialization
     void Start() {
-        startPanel.SetActive(true);
+        helpPanel.SetActive(true);
         settingsOpened = false;
         transition = false;
-        start = true;
+        help = true;
     }
 
     public void GoToApp()
     {
-        StartCoroutine(FadeOut(0.5f, startPanel, startPanel.GetComponent<CanvasGroup>()));
-        start = false;
+        StartCoroutine(FadeOut(0.5f, helpPanel, helpPanel.GetComponent<CanvasGroup>()));
+        help = false;
+    }
+
+    public void Help()
+    {
+        StartCoroutine(FadeIn(0.5f, helpPanel, helpPanel.GetComponent<CanvasGroup>()));
+        help = true;
     }
 
     public void OptionGesture()
@@ -51,6 +57,21 @@ public class CanvasController : MonoBehaviour {
         yield return new WaitForSeconds(2);
         transition = false;
         settingsOpened = !settingsOpened;
+    }
+
+    IEnumerator FadeIn(float duration, GameObject screen, CanvasGroup canvasGroup)
+    {
+        float time = 0.0f;
+        screen.SetActive(true);
+
+        while (time <= duration)
+        {
+            time += Time.deltaTime;
+            canvasGroup.alpha = time / duration;
+            yield return null;
+        }
+
+        canvasGroup.alpha = 1.0f;
     }
 
     IEnumerator FadeOut(float duration, GameObject screen, CanvasGroup canvasGroup)
