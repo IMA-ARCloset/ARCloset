@@ -9,6 +9,8 @@ TagManager:
   - FlameThrower
   - EgyptTorch
   - Waterfalls
+  - Rain
+  - VillageLight
   layers:
   - Default
   - TransparentFX
