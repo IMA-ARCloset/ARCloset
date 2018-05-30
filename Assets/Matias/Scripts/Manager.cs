@@ -13,6 +13,8 @@ public class Manager : MonoBehaviour
     public GameObject[] l_EgyptTorchs;
     public GameObject[] l_flamethrower;
     public GameObject[] l_waterfalls;
+    public GameObject[] l_VillageLights;
+    public GameObject[] l_VillageFire;
 
     public Light directional_light;
     public Transform day_transform, night_transform;
@@ -47,6 +49,10 @@ public class Manager : MonoBehaviour
 
         l_waterfalls = GameObject.FindGameObjectsWithTag("Waterfalls");
 
+        l_VillageLights = GameObject.FindGameObjectsWithTag("VillageLight");
+
+        l_VillageFire = GameObject.FindGameObjectsWithTag("VillageFire");
+
         special_effect = false;
 
         foreach (GameObject gO in l_TempleTorchs)
@@ -67,6 +73,21 @@ public class Manager : MonoBehaviour
         }
 
         foreach (GameObject gO in l_waterfalls)
+        {
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        /*
+            Efectos del pueblo
+        */
+        foreach (GameObject gO in l_VillageLights)
+        {
+            gO.SetActive(false);
+        }
+
+        foreach (GameObject gO in l_VillageFire)
         {
             var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
             foreach (ParticleSystem p in l_aux)
@@ -119,7 +140,8 @@ public class Manager : MonoBehaviour
                 break;
 
             case (int)escenario.Village:
-
+                if (special_effectCorroutine == null)
+                    special_effectCorroutine = StartCoroutine(Village_specialEffect());
                 break;
 
             case (int)escenario.Egypt:
@@ -128,6 +150,7 @@ public class Manager : MonoBehaviour
                 break;
         }
     }
+
 
     public void Change_dayNight()
     {
@@ -142,7 +165,7 @@ public class Manager : MonoBehaviour
                     break;
 
                 case (int)escenario.Village:
-
+                    Village_nightfall();
                     break;
 
                 case (int)escenario.Egypt:
@@ -161,7 +184,7 @@ public class Manager : MonoBehaviour
                 break;
 
             case (int)escenario.Village:
-
+                Village_dawn();
                 break;
 
             case (int)escenario.Egypt:
@@ -177,7 +200,7 @@ public class Manager : MonoBehaviour
 
 
     #region 
-    //templo
+    // Templo
     public void Temple_nightfall()
     {
         //directional_light.transform.rotation = Quaternion.Slerp(day_transform.rotation, night_transform.rotation, Time.time * sun_speed);
@@ -189,13 +212,24 @@ public class Manager : MonoBehaviour
         StartCoroutine(Transition());
     }
 
-    //Egipto
+    // Egipto
     public void Egypt_nightfall()
     {
         StartCoroutine(Transition());
     }
 
     public void Egypt_dawn()
+    {
+        StartCoroutine(Transition());
+    }
+
+    // Pueblo
+    public void Village_nightfall()
+    {
+        StartCoroutine(Transition());
+    }
+
+    public void Village_dawn()
     {
         StartCoroutine(Transition());
     }
@@ -241,6 +275,7 @@ public class Manager : MonoBehaviour
                 break;
 
             case (int)escenario.Village:
+                Manage_VillageLights();
                 break;
         }
     }
@@ -292,6 +327,28 @@ public class Manager : MonoBehaviour
         }
     }
 
+    IEnumerator Manage_VillageLights()
+    {
+        if (day)
+        {
+            foreach (GameObject t in l_VillageLights)
+            {
+                //t.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                t.SetActive(false);
+                yield return new WaitForSeconds(0.3f);
+            }
+        }
+        else
+        {
+            foreach (GameObject t in l_EgyptTorchs)
+            {
+                //t.GetComponentInChildren<ParticleSystem>().Play(true);
+                t.SetActive(true);
+                yield return new WaitForSeconds(0.2f);
+            }
+        }
+    }
+
     /* 
         De aqui para abajo todos los efectos especiales
     */
@@ -338,5 +395,27 @@ public class Manager : MonoBehaviour
 
         special_effectCorroutine = null;
     }
+
+    private IEnumerator Village_specialEffect()
+    {
+        foreach (GameObject gO in l_VillageFire)
+        {
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Play(true);
+        }
+
+        yield return new WaitForSeconds(5f);
+
+        foreach (GameObject gO in l_VillageFire)
+        {
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        special_effectCorroutine = null;
+    }
+
 
 }
