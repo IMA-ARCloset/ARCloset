@@ -17,7 +17,7 @@ public class VoiceController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        keywords = new string[] { "siguiente", "anterior", "escenario", "modelo", "tinte", "día", "noche", "sonido", "salir" };
+        keywords = new string[] { "continuar", "siguiente", "anterior", "escenario", "modelo", "tinte", "día", "noche", "sonido", "salir" };
 
         if (keywords != null)
         {
@@ -31,62 +31,66 @@ public class VoiceController : MonoBehaviour
     {
         Debug.Log(args.text);
 
-        switch (args.text)
-        {
-            case "siguiente":
-                if (manager.changing == 1)
-                    manager.Change_character(manager.current_character + 1);
-                else
-                    manager.Change_scene(manager.current_scene + 1);
-                break;
-            case "anterior":
-                if (manager.changing == 1)
-                    manager.Change_character(manager.current_character - 1);
-                else
-                    manager.Change_scene(manager.current_scene - 1);
-                break;
-            case "escenario":
-                manager.changing = 0;
-                break;
-            case "modelo":
-                manager.changing = 1;
-                break;
-            case "tinte":
-                break;
-            case "día":
-                //if (canvasController.settingsOpened && 
-                if (!manager.day)
-                {
-                    canvasController.dayImage.sprite = canvasController.sunSprite;
-                    manager.Change_dayNight();
-                }
-                break;
-            case "noche":
-                //if (canvasController.settingsOpened && 
-                if (manager.day)
-                {
-                    canvasController.dayImage.sprite = canvasController.moonSprite;
-                    manager.Change_dayNight();
-                }
-                break;
-            case "sonido":
-                if (canvasController.settingsOpened)
-                {
-                    manager.sound = !manager.sound;
-                    if (manager.sound)
-                        canvasController.soundImage.sprite = canvasController.soundOnSprite;
-                    else
-                        canvasController.soundImage.sprite = canvasController.soundOffSprite;
-                }
-                break;
-            case "salir":
-                if (canvasController.settingsOpened)
+        if (canvasController.start && args.text == "continuar")
+            canvasController.GoToApp();
 
-                {
-                    Debug.Log("Salimos de la aplicación");
-                    Application.Quit();
-                }
-                break;
+        if (!canvasController.start)
+        {
+            switch (args.text)
+            {
+                case "siguiente":
+                    if (manager.changing == 1)
+                        manager.Change_character(manager.current_character + 1);
+                    else
+                        manager.Change_scene(manager.current_scene + 1);
+                    break;
+                case "anterior":
+                    if (manager.changing == 1)
+                        manager.Change_character(manager.current_character - 1);
+                    else
+                        manager.Change_scene(manager.current_scene - 1);
+                    break;
+                case "escenario":
+                    manager.changing = 0;
+                    break;
+                case "modelo":
+                    manager.changing = 1;
+                    break;
+                case "tinte":
+                    break;
+                case "día":
+                    if (canvasController.settingsOpened && !manager.day)
+                    {
+                        canvasController.dayImage.sprite = canvasController.sunSprite;
+                        manager.Change_dayNight();
+                    }
+                    break;
+                case "noche":
+                    if (canvasController.settingsOpened && manager.day)
+                    {
+                        canvasController.dayImage.sprite = canvasController.moonSprite;
+                        manager.Change_dayNight();
+                    }
+                    break;
+                case "sonido":
+                    if (canvasController.settingsOpened)
+                    {
+                        manager.sound = !manager.sound;
+                        if (manager.sound)
+                            canvasController.soundImage.sprite = canvasController.soundOnSprite;
+                        else
+                            canvasController.soundImage.sprite = canvasController.soundOffSprite;
+                    }
+                    break;
+                case "salir":
+                    if (canvasController.settingsOpened)
+
+                    {
+                        Debug.Log("Salimos de la aplicación");
+                        Application.Quit();
+                    }
+                    break;
+            }
         }
     }
 }

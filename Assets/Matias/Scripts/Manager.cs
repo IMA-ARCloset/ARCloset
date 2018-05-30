@@ -54,10 +54,13 @@ public class Manager : MonoBehaviour
         if (Input.GetKeyDown("n") && !transition)
             Change_dayNight();
 
-        if (Input.GetKey("e") && special_effectCorroutine == null)
+        if (Input.GetKeyDown("k"))
+            Change_scene(current_scene + 1);
+
+        if (Input.GetKeyDown("e") && special_effectCorroutine == null)
         {
-            Special_effect();
             Debug.Log("LLAMAMAMOM");
+            Special_effect();
         }
     }
 

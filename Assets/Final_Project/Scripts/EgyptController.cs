@@ -18,7 +18,7 @@ public class EgyptController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void OnEnable()
     {
         if (manager.day)
             foreach (GameObject gO in l_EgyptTorchs)
