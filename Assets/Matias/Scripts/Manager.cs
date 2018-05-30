@@ -6,64 +6,51 @@ using UnityEngine;
 
 public class Manager : MonoBehaviour
 {
+    public TempleController templeController;
+    public EgyptController egyptController;
 
     public GameObject[] l_scenes;
     public GameObject[] l_characters;
-    public GameObject[] l_TempleTorchs;
-    public GameObject[] l_EgyptTorchs;
-    public GameObject[] l_flamethrower;
 
     public Light directional_light;
     public Transform day_transform, night_transform;
-    public int current_scene = 0, current_character = 0, total_characters = 5;
+    public int current_scene, current_character, total_characters, total_scenes;
     public float sun_speed = 0.1f;
-    public bool day = true, transition = false;
-
+    public bool day = true, transition = false, sound = false;
+    public int changing = 0; //0: escenarios, 1: modelos
+    public GameObject templeScene, villageScene, EgyptScene;
 
     private enum escenario { Temple, Village, Egypt }
-    private Coroutine current_coroutine, special_effectCorroutine;
+    public Coroutine special_effectCorroutine;
     private bool special_effect;
-    /*
-		Habra alguans escenas que sean diferentes de noche y de dia por eso de los lightMaps
-		y en otras simplemente cambiaremos la orientacion del skybox y pondremos cuatro lamparas
-	*/
-    private int total_scenes = Enum.GetNames(typeof(escenario)).Length + 1;
 
 
     // Use this for initialization
     private void Start()
     {
-        l_scenes = new GameObject[total_scenes]; // +1 xq la Village son dos escenarios con light maps diferentes
-        l_characters = new GameObject[total_characters];
+        l_scenes = new GameObject[] { templeScene, villageScene, EgyptScene };
+        total_scenes = l_scenes.Length;
+        current_scene = 2;
 
-        l_TempleTorchs = GameObject.FindGameObjectsWithTag("Torch");
-        l_TempleTorchs = l_TempleTorchs.OrderBy(go => go.name).ToArray();
-
-        l_flamethrower = GameObject.FindGameObjectsWithTag("FlameThrower");
-        l_flamethrower = l_flamethrower.OrderBy(go => go.name).ToArray();
-
-        l_EgyptTorchs = GameObject.FindGameObjectsWithTag("EgyptTorch");
+        l_characters = GameObject.FindGameObjectsWithTag("Model");
+        l_characters = l_characters.OrderBy(go => go.name).ToArray();
+        total_characters = l_characters.Length;
+        current_character = 0;
 
         special_effect = false;
 
-        foreach (GameObject gO in l_TempleTorchs)
-        {
-            gO.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        }
+        for (int i = 0; i < total_scenes; i++)
+            if(i != current_scene)
+                l_scenes[i].SetActive(false);
 
-        foreach (GameObject gO in l_flamethrower)
-        {
-            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
-            foreach (ParticleSystem p in l_aux)
-                p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        }
-
+        for (int i = 0; i < total_characters; i++)
+            if (i != current_character)
+                l_characters[i].SetActive(false);
     }
-
 
     private void Update()
     {
-        if (Input.GetKey("n") && !transition)
+        if (Input.GetKeyDown("n") && !transition)
             Change_dayNight();
 
         if (Input.GetKey("e") && special_effectCorroutine == null)
@@ -71,27 +58,49 @@ public class Manager : MonoBehaviour
             Special_effect();
             Debug.Log("LLAMAMAMOM");
         }
-
-
-        // if (special_effectCorroutine == null)
-        //     Debug.Log("NO HAY NAH");
     }
 
     public void Change_scene(int n)
     {
-        if (n > 0 && n < total_scenes)
+        if (n >= 0 && n < total_scenes)
         {
             l_scenes[current_scene].SetActive(false); // Desactivamos la escena en la que nos encontramos
             l_scenes[n].SetActive(true); // Activamos la escena siguiente
+            current_scene = n;
+        }
+        else if (n == total_scenes)
+        {
+            l_scenes[current_scene].SetActive(false);
+            l_scenes[0].SetActive(true);
+            current_scene = 0;
+        }
+        else if (n < 0)
+        {
+            l_scenes[current_scene].SetActive(false);
+            l_scenes[total_scenes - 1].SetActive(true);
+            current_scene = total_scenes - 1;
         }
     }
 
     public void Change_character(int n)
     {
-        if (n > 0 && n < total_characters)
+        if (n >= 0 && n < total_characters)
         {
-            l_characters[current_character].SetActive(false); // Desactivamos la escena en la que nos encontramos
-            l_characters[n].SetActive(true); // Activamos la escena siguiente
+            l_characters[current_character].SetActive(false); // Desactivamos el modelo en el que nos encontramos
+            l_characters[n].SetActive(true); // Activamos el modelo siguiente
+            current_character = n;
+        }
+        else if (n == total_characters)
+        {
+            l_characters[current_character].SetActive(false);
+            l_characters[0].SetActive(true);
+            current_character = 0;
+        }
+        else if (n < 0)
+        {
+            l_characters[current_character].SetActive(false);
+            l_characters[total_characters - 1].SetActive(true);
+            current_character = total_characters - 1;
         }
     }
 
@@ -101,7 +110,7 @@ public class Manager : MonoBehaviour
         {
             case (int)escenario.Temple:
                 if (special_effectCorroutine == null)
-                    special_effectCorroutine = StartCoroutine(Temple_specialEffect());
+                    special_effectCorroutine = StartCoroutine(templeController.Temple_specialEffect());
                 break;
 
             case (int)escenario.Village:
@@ -122,7 +131,6 @@ public class Manager : MonoBehaviour
             switch (current_scene)
             {
                 case (int)escenario.Temple:
-
                     Temple_nightfall();
                     break;
 
@@ -141,7 +149,6 @@ public class Manager : MonoBehaviour
         switch (current_scene)
         {
             case (int)escenario.Temple:
-
                 Temple_dawn();
                 break;
 
@@ -159,13 +166,11 @@ public class Manager : MonoBehaviour
     /*
 		FUNCIONES PARA GESTIONAR EL CICLO DIA NOCHE
 	*/
-
     
     #region 
     //templo
     public void Temple_nightfall()
     {
-        //directional_light.transform.rotation = Quaternion.Slerp(day_transform.rotation, night_transform.rotation, Time.time * sun_speed);
         StartCoroutine(Transition());
     }
 
@@ -192,7 +197,7 @@ public class Manager : MonoBehaviour
     {
         if (day) // Anochece
         {
-            for (int i = 0; i < 90; i++) //while (directional_light.transform.rotation != night_transform.rotation)
+            for (int i = 0; i < 120; i++)
             {
                 directional_light.transform.Rotate(new Vector3(-0.5f, 0, 0), Space.World);
                 yield return new WaitForSeconds(0.05f);
@@ -202,7 +207,7 @@ public class Manager : MonoBehaviour
         }
         else //  Amanece
         {
-            for (int i = 0; i < 90; i++) //while (directional_light.transform.rotation != day_transform.rotation)
+            for (int i = 0; i < 120; i++)
             {
                 directional_light.transform.Rotate(new Vector3(0.5f, 0, 0), Space.World);
                 yield return new WaitForSeconds(0.05f);
@@ -218,88 +223,15 @@ public class Manager : MonoBehaviour
         switch (current_scene)
         {
             case (int)escenario.Temple:
-                StartCoroutine(Manage_templeTorchs());
+                templeController.manageTorchs();
                 break;
 
             case (int)escenario.Egypt:
-                StartCoroutine(Manage_EgyptTorchs());
+                egyptController.manageTorchs();
                 break;
 
             case (int)escenario.Village:
                 break;
         }
     }
-
-    /*
-        Gestiona las antorchas
-    */
-    IEnumerator Manage_templeTorchs()
-    {
-
-        if (day)
-        {
-            for (int i = 0; i < 6; i += 2)
-            {
-                l_TempleTorchs[i].GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting); //Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                l_TempleTorchs[i + 1].GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                yield return new WaitForSeconds(1.5f);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < 6; i += 2)
-            {
-                l_TempleTorchs[i].GetComponentInChildren<ParticleSystem>().Play(true); //Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                l_TempleTorchs[i + 1].GetComponentInChildren<ParticleSystem>().Play(true);
-                yield return new WaitForSeconds(1.5f);
-            }
-        }
-    }
-
-    IEnumerator Manage_EgyptTorchs()
-    {
-
-        if (day)
-        {
-            foreach (GameObject t in l_EgyptTorchs)
-            {
-                t.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                yield return new WaitForSeconds(0.5f);
-            }
-        }
-        else
-        {
-            foreach (GameObject t in l_EgyptTorchs)
-            {
-                t.GetComponentInChildren<ParticleSystem>().Play(true);
-                yield return new WaitForSeconds(0.3f);
-            }
-        }
-    }
-
-    /* 
-        De aqui para abajo todos los efectos especiales
-    */
-
-    IEnumerator Temple_specialEffect()
-    {
-        foreach (GameObject gO in l_flamethrower)
-        {
-            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
-            foreach (ParticleSystem p in l_aux)
-                p.Play(true);
-        }
-
-        yield return new WaitForSeconds(5f);
-
-        foreach (GameObject gO in l_flamethrower)
-        {
-            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
-            foreach (ParticleSystem p in l_aux)
-                p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        }
-
-        special_effectCorroutine = null;
-    }
-
 }

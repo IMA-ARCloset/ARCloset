@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Model
+  - Torch
+  - FlameThrower
+  - EgyptTorch
   layers:
   - Default
   - TransparentFX

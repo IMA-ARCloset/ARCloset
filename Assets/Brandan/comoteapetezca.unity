@@ -13623,7 +13623,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   l_scenes: []
   l_characters: []
-  l_torchs: []
+  l_TempleTorchs: []
+  l_EgyptTorchs: []
   l_flamethrower: []
   directional_light: {fileID: 1682541080}
   day_transform: {fileID: 0}
