@@ -4,30 +4,38 @@ using UnityEngine;
 
 public class VillageController : MonoBehaviour
 {
-	public Manager manager;
+    public Manager manager;
     public GameObject[] l_VillageLights;
-	public GameObject[] l_VillageRain;
+    public GameObject[] l_VillageRain;
 
     private void Awake()
     {
         l_VillageLights = GameObject.FindGameObjectsWithTag("VillageLight");
+        l_VillageRain = GameObject.FindGameObjectsWithTag("Rain");
     }
 
     private void OnEnable()
     {
-        foreach (GameObject gO in l_VillageLights)
+        if (manager.day)
+            foreach (GameObject gO in l_VillageLights)
+            {
+                gO.SetActive(false);
+            }
+
+        foreach (GameObject gO in l_VillageRain)
         {
-            gO.SetActive(false);
+            var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem p in l_aux)
+                p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         }
     }
 
-	public IEnumerator Manage_VillageLights()
+    public IEnumerator Manage_VillageLights()
     {
         if (manager.day)
         {
             foreach (GameObject t in l_VillageLights)
             {
-                //t.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
                 t.SetActive(false);
                 yield return new WaitForSeconds(0.3f);
             }
@@ -36,12 +44,11 @@ public class VillageController : MonoBehaviour
         {
             foreach (GameObject t in l_VillageLights)
             {
-                //t.GetComponentInChildren<ParticleSystem>().Play(true);
                 t.SetActive(true);
                 yield return new WaitForSeconds(0.2f);
             }
         }
-}
+    }
 
     public IEnumerator Village_specialEffect()
     {

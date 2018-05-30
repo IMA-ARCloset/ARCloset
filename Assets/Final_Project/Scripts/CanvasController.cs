@@ -2,9 +2,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CanvasController : MonoBehaviour {
-
-    public Manager manager;
+public class CanvasController : MonoBehaviour 
+{
     public GameObject helpPanel, gamePanel;
     public Image dayImage, soundImage;
     public Sprite sunSprite, moonSprite, soundOnSprite, soundOffSprite;

@@ -8,7 +8,7 @@ public class VoiceController : MonoBehaviour
 {
     //Reconocimiento por voz
     public string[] keywords;
-    public ConfidenceLevel confidence = ConfidenceLevel.Medium;
+    public ConfidenceLevel confidence = ConfidenceLevel.Low;
     protected KeywordRecognizer recognizer;
 
     public Manager manager;
@@ -58,8 +58,6 @@ public class VoiceController : MonoBehaviour
                     break;
                 case "modelo":
                     manager.changing = 1;
-                    break;
-                case "tinte":
                     break;
                 case "día":
                     if (canvasController.settingsOpened && !manager.day)

@@ -25,7 +25,6 @@ public class Manager : MonoBehaviour
     public Coroutine special_effectCorroutine;
     private bool special_effect;
 
-
     // Use this for initialization
     private void Start()
     {
@@ -58,10 +57,7 @@ public class Manager : MonoBehaviour
             Change_scene(current_scene + 1);
 
         if (Input.GetKeyDown("e") && special_effectCorroutine == null)
-        {
-            Debug.Log("LLAMAMAMOM");
             Special_effect();
-        }
     }
 
     public void Change_scene(int n)
