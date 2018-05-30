@@ -8,6 +8,7 @@ public class Manager : MonoBehaviour
 {
     public TempleController templeController;
     public EgyptController egyptController;
+    public VillageController villageController;
 
     public GameObject[] l_scenes;
     public GameObject[] l_characters;
@@ -40,7 +41,7 @@ public class Manager : MonoBehaviour
         special_effect = false;
 
         for (int i = 0; i < total_scenes; i++)
-            if(i != current_scene)
+            if (i != current_scene)
                 l_scenes[i].SetActive(false);
 
         for (int i = 0; i < total_characters; i++)
@@ -114,7 +115,8 @@ public class Manager : MonoBehaviour
                 break;
 
             case (int)escenario.Village:
-
+                if (special_effectCorroutine == null)
+                    special_effectCorroutine = StartCoroutine(villageController.Village_specialEffect());
                 break;
 
             case (int)escenario.Egypt:
@@ -136,7 +138,7 @@ public class Manager : MonoBehaviour
                     break;
 
                 case (int)escenario.Village:
-
+                    Village_nightfall();
                     break;
 
                 case (int)escenario.Egypt:
@@ -154,7 +156,7 @@ public class Manager : MonoBehaviour
                 break;
 
             case (int)escenario.Village:
-
+                Village_dawn();
                 break;
 
             case (int)escenario.Egypt:
@@ -167,7 +169,7 @@ public class Manager : MonoBehaviour
     /*
 		FUNCIONES PARA GESTIONAR EL CICLO DIA NOCHE
 	*/
-    
+
     #region 
     //templo
     public void Temple_nightfall()
@@ -179,7 +181,7 @@ public class Manager : MonoBehaviour
     {
         StartCoroutine(Transition());
     }
-    
+
     //Egipto
     public void Egypt_nightfall()
     {
@@ -187,6 +189,16 @@ public class Manager : MonoBehaviour
     }
 
     public void Egypt_dawn()
+    {
+        StartCoroutine(Transition());
+    }
+
+    public void Village_nightfall()
+    {
+        StartCoroutine(Transition());
+    }
+
+    public void Village_dawn()
     {
         StartCoroutine(Transition());
     }
@@ -232,6 +244,7 @@ public class Manager : MonoBehaviour
                 break;
 
             case (int)escenario.Village:
+                StartCoroutine(villageController.Manage_VillageLights());
                 break;
         }
     }
