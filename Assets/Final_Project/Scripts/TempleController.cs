@@ -34,12 +34,7 @@ public class TempleController : MonoBehaviour {
         }
     }
 
-    public void manageTorchs()
-    {
-        StartCoroutine(Manage_templeTorchs());
-    }
-
-    IEnumerator Manage_templeTorchs()
+    public IEnumerator Manage_templeTorchs()
     {
 
         if (manager.day)

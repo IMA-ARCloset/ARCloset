@@ -118,7 +118,8 @@ public class Manager : MonoBehaviour
                 break;
 
             case (int)escenario.Egypt:
-
+                if (special_effectCorroutine == null)
+                    special_effectCorroutine = StartCoroutine(egyptController.Egypt_specialEffect());
                 break;
         }
     }
@@ -223,11 +224,11 @@ public class Manager : MonoBehaviour
         switch (current_scene)
         {
             case (int)escenario.Temple:
-                templeController.manageTorchs();
+                StartCoroutine(templeController.Manage_templeTorchs());
                 break;
 
             case (int)escenario.Egypt:
-                egyptController.manageTorchs();
+                StartCoroutine(egyptController.Manage_EgyptTorchs());
                 break;
 
             case (int)escenario.Village:
