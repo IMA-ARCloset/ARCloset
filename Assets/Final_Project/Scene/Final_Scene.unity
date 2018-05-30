@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4512105, g: 0.5009427, b: 0.5736422, a: 1}
+  m_IndirectSpecularColor: {r: 0.45121038, g: 0.5009425, b: 0.5736411, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -44032,7 +44032,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   templeController: {fileID: 2064675008}
-  egyptController: {fileID: 1896577844}
+  egyptController: {fileID: 0}
   l_scenes: []
   l_characters: []
   directional_light: {fileID: 1408912025}
@@ -72111,6 +72111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   manager: {fileID: 1148566861}
   l_EgyptTorchs: []
+  l_waterfalls: []
 --- !u!1001 &1897580602
 Prefab:
   m_ObjectHideFlags: 0
