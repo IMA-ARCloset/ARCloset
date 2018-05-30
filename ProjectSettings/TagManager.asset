@@ -8,6 +8,7 @@ TagManager:
   - Torch
   - FlameThrower
   - EgyptTorch
+  - Waterfalls
   layers:
   - Default
   - TransparentFX
