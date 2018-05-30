@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.45121038, g: 0.5009425, b: 0.5736411, a: 1}
+  m_IndirectSpecularColor: {r: 0.4512105, g: 0.5009427, b: 0.5736422, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -13517,7 +13517,7 @@ GameObject:
   - component: {fileID: 344099866}
   m_Layer: 0
   m_Name: Spotlight
-  m_TagString: Untagged
+  m_TagString: VillageLight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45756,6 +45756,7 @@ MonoBehaviour:
   templeController: {fileID: 2064675008}
   egyptController: {fileID: 1356194621}
   villageController: {fileID: 1879113420}
+  camera: {fileID: 1718949747}
   l_scenes: []
   l_characters: []
   directional_light: {fileID: 1408912025}
@@ -68986,6 +68987,8 @@ GameObject:
   - component: {fileID: 1718949747}
   - component: {fileID: 1718949746}
   - component: {fileID: 1718949745}
+  - component: {fileID: 1718949750}
+  - component: {fileID: 1718949749}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -69050,12 +69053,36 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1718949744}
   m_LocalRotation: {x: 0.15992677, y: -0, z: -0, w: 0.987129}
-  m_LocalPosition: {x: 0, y: 4.7799997, z: -6.6099997}
+  m_LocalPosition: {x: 0, y: 5.37, z: -8.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 18.405, y: 0, z: 0}
+--- !u!114 &1718949749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1718949744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f0bb637400511d4ea2b471d19df5239, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pP: {fileID: 11400000, guid: ca367b259703d9e42842fe2d13f60816, type: 2}
+--- !u!114 &1718949750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1718949744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: ca367b259703d9e42842fe2d13f60816, type: 2}
 --- !u!1001 &1722098149
 Prefab:
   m_ObjectHideFlags: 0

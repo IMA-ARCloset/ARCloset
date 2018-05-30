@@ -9,6 +9,7 @@ public class Manager : MonoBehaviour
     public TempleController templeController;
     public EgyptController egyptController;
     public VillageController villageController;
+    public Camera camera;
 
     public GameObject[] l_scenes;
     public GameObject[] l_characters;
@@ -20,10 +21,12 @@ public class Manager : MonoBehaviour
     public bool day = true, transition = false, sound = false;
     public int changing = 0; //0: escenarios, 1: modelos
     public GameObject templeScene, villageScene, EgyptScene;
+    public Coroutine special_effectCorroutine;
 
     private enum escenario { Temple, Village, Egypt }
-    public Coroutine special_effectCorroutine;
+    private CameraManager cameraManager;
     private bool special_effect;
+    
 
     // Use this for initialization
     private void Start()
@@ -46,6 +49,9 @@ public class Manager : MonoBehaviour
         for (int i = 0; i < total_characters; i++)
             if (i != current_character)
                 l_characters[i].SetActive(false);
+
+        cameraManager = camera.GetComponent<CameraManager>();
+        cameraManager.Disable_bloom();
     }
 
     private void Update()
@@ -58,6 +64,12 @@ public class Manager : MonoBehaviour
 
         if (Input.GetKeyDown("e") && special_effectCorroutine == null)
             Special_effect();
+
+
+        if (current_scene == (int)escenario.Village && !day && !transition)
+            cameraManager.Enable_bloom();
+        else
+            cameraManager.Disable_bloom();
     }
 
     public void Change_scene(int n)
