@@ -37,8 +37,6 @@ public class BodySourceManager : MonoBehaviour
                     _Sensor.Open();
                 }
             }
-
-            
         }
      
         void Update()

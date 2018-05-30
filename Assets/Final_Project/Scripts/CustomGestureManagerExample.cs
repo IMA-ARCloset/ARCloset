@@ -18,6 +18,7 @@ public class CustomGestureManagerExample : MonoBehaviour
 
     DiscreteGestureResult gesture1, gesture2, gesture3, gesture4;
 
+    public Manager manager;
     public CanvasController canvasController;
 
     public void SetTrackingId(ulong id)
@@ -92,7 +93,8 @@ public class CustomGestureManagerExample : MonoBehaviour
         } 
         else if (gesture2.Detected == true && gesture2.Confidence > 0.9f)
         {
-            //EFECTOS ESPECIALES
+            if(manager.special_effectCorroutine == null)
+                manager.Special_effect();
         }
     }
 }

@@ -8,7 +8,7 @@ public class VoiceController : MonoBehaviour
 {
     //Reconocimiento por voz
     public string[] keywords;
-    public ConfidenceLevel confidence = ConfidenceLevel.Low;
+    public ConfidenceLevel confidence = ConfidenceLevel.Medium;
     protected KeywordRecognizer recognizer;
 
     public Manager manager;
