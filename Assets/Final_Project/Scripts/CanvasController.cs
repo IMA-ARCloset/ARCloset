@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CanvasController : MonoBehaviour 
 {
@@ -9,6 +10,7 @@ public class CanvasController : MonoBehaviour
     public Sprite sunSprite, moonSprite, soundOnSprite, soundOffSprite;
     public Animator settingsIconAnim, settingsPanelAnim;
     public bool settingsOpened, transition, help;
+    public TextMeshProUGUI text;
 
     // Use this for initialization
     void Start() {

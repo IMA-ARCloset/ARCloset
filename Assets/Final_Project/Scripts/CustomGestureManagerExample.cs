@@ -87,14 +87,17 @@ public class CustomGestureManagerExample : MonoBehaviour
 
     void Do_things(VisualGestureBuilderFrame frame)
     {
-        if (gesture1.Detected == true)
+        if (gesture2.Detected == true && gesture2.Confidence > 0.9f)
+        {
+            if (manager.special_effectCorroutine == null)
+            {
+                Debug.Log("EFECTO");
+                manager.Special_effect();
+            }
+        }
+        else if (gesture1.Detected == true)
         {
             canvasController.OptionGesture();
         } 
-        else if (gesture2.Detected == true && gesture2.Confidence > 0.9f)
-        {
-            if(manager.special_effectCorroutine == null)
-                manager.Special_effect();
-        }
     }
 }

@@ -17,7 +17,7 @@ public class VoiceController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        keywords = new string[] { "ayuda", "continuar", "siguiente", "anterior", "escenario", "modelo", "día", "noche", "sonido", "salir" };
+        keywords = new string[] { "ayuda", "continuar", "siguiente", "anterior", "escenario", "personaje", "día", "noche", "sonido", "salir" };
 
         if (keywords != null)
         {
@@ -55,9 +55,11 @@ public class VoiceController : MonoBehaviour
                     break;
                 case "escenario":
                     manager.changing = 0;
+                    canvasController.text.SetText("Cambiando escenario");
                     break;
-                case "modelo":
+                case "personaje":
                     manager.changing = 1;
+                    canvasController.text.SetText("Cambiando personaje");
                     break;
                 case "día":
                     if (canvasController.settingsOpened && !manager.day)
