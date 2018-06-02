@@ -57,7 +57,7 @@ public class TempleController : MonoBehaviour {
         }
     }
 
-    public IEnumerator Temple_specialEffect()
+    public IEnumerator Temple_specialEffect(AudioManager aM)
     {
         foreach (GameObject gO in l_flamethrower)
         {

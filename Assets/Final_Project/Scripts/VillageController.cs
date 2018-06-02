@@ -50,7 +50,7 @@ public class VillageController : MonoBehaviour
         }
     }
 
-    public IEnumerator Village_specialEffect()
+    public IEnumerator Village_specialEffect(AudioManager am)
     {
         foreach (GameObject gO in l_VillageRain)
         {
