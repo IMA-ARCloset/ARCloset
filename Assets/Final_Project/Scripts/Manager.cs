@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+using UnityEngine.Audio;
 public class Manager : MonoBehaviour
 {
     public TempleController templeController;
     public EgyptController egyptController;
     public VillageController villageController;
+    public AudioManager audioManager;
     public Camera camera;
 
     public GameObject[] l_scenes;
@@ -27,7 +28,6 @@ public class Manager : MonoBehaviour
     private CameraManager cameraManager;
     private bool special_effect;
     
-
     // Use this for initialization
     private void Start()
     {
@@ -122,17 +122,17 @@ public class Manager : MonoBehaviour
         {
             case (int)escenario.Temple:
                 if (special_effectCorroutine == null)
-                    special_effectCorroutine = StartCoroutine(templeController.Temple_specialEffect());
+                    special_effectCorroutine = StartCoroutine(templeController.Temple_specialEffect(audioManager));
                 break;
 
             case (int)escenario.Village:
                 if (special_effectCorroutine == null)
-                    special_effectCorroutine = StartCoroutine(villageController.Village_specialEffect());
+                    special_effectCorroutine = StartCoroutine(villageController.Village_specialEffect(audioManager));
                 break;
 
             case (int)escenario.Egypt:
                 if (special_effectCorroutine == null)
-                    special_effectCorroutine = StartCoroutine(egyptController.Egypt_specialEffect());
+                    special_effectCorroutine = StartCoroutine(egyptController.Egypt_specialEffect(audioManager));
                 break;
         }
     }
@@ -251,7 +251,7 @@ public class Manager : MonoBehaviour
                 break;
 
             case (int)escenario.Egypt:
-                StartCoroutine(egyptController.Manage_EgyptTorchs());
+                StartCoroutine(egyptController.Manage_EgyptTorchs(audioManager));
                 break;
 
             case (int)escenario.Village:
