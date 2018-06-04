@@ -47,10 +47,16 @@ public class EgyptController : MonoBehaviour
         {
             foreach (GameObject t in l_EgyptTorchs)
             {
-                AudioSource aS = l_torchsSounds.Dequeue();
-                if (aS != null)
-                    Debug.LogWarning("UN SONIDO ES NULL");
-                //aS.Stop();
+                AudioSource aS = t.GetComponent<AudioSource>();
+                if (aS != null && aS.isPlaying)
+                {
+                    aS.Stop();
+                }
+                else
+                {
+                    Debug.LogWarning("No se ha encontrado AudioSource");
+                }
+
                 t.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
 
                 yield return new WaitForSeconds(0.5f);
@@ -60,10 +66,18 @@ public class EgyptController : MonoBehaviour
         {
             foreach (GameObject t in l_EgyptTorchs)
             {
+                AudioSource aS = t.GetComponent<AudioSource>();
+                if (aS != null)
+                {
+                    aS.pitch = Random.Range(0.8f, 1.2f);
+                    aS.Play();
+                }
+                else
+                {
+                    Debug.LogWarning("No se ha encontrado AudioSource");
+                }
+
                 t.GetComponentInChildren<ParticleSystem>().Play(true);
-                AudioSource aS = am.PlayShoot("Torch");
-                am.SetPitch(aS, Random.Range(0.8f, 1.2f));
-                l_torchsSounds.Enqueue(aS);
 
                 yield return new WaitForSeconds(0.5f);
             }
@@ -72,8 +86,19 @@ public class EgyptController : MonoBehaviour
 
     public IEnumerator Egypt_specialEffect(AudioManager am)
     {
+        AudioSource aS;
         foreach (GameObject gO in l_waterfalls)
         {
+            aS = gO.GetComponent<AudioSource>();
+            if (aS != null)
+            {
+                aS.pitch = Random.Range(0.8f, 1.2f);
+                aS.Play();
+            }
+            else
+            {
+                Debug.LogWarning("No se ha encontrado AudioSource");
+            }
             var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
             foreach (ParticleSystem p in l_aux)
             {
@@ -87,12 +112,19 @@ public class EgyptController : MonoBehaviour
 
         foreach (GameObject gO in l_waterfalls)
         {
+            aS = gO.GetComponent<AudioSource>();
+            if (aS != null && aS.isPlaying)
+            {
+                aS.Stop();
+            }
+            else
+            {
+                Debug.LogWarning("No se ha encontrado AudioSource");
+            }
             var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
             foreach (ParticleSystem p in l_aux)
             {
                 p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                AudioSource aS = l_waterfallsSounds.Dequeue();
-                aS.Stop();
             }
 
         }
