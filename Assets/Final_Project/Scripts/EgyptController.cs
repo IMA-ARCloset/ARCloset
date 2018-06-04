@@ -15,22 +15,34 @@ public class EgyptController : MonoBehaviour
         l_EgyptTorchs = GameObject.FindGameObjectsWithTag("EgyptTorch");
 
         l_waterfalls = GameObject.FindGameObjectsWithTag("Waterfalls");
+
+        foreach (GameObject gO in l_EgyptTorchs)
+            gO.GetComponent<AudioSource>().Stop();
+
+        foreach (GameObject gO in l_waterfalls)
+            gO.GetComponent<AudioSource>().Stop();
     }
 
     // Update is called once per frame
     void OnEnable()
     {
         if (manager.day)
+        {
             foreach (GameObject gO in l_EgyptTorchs)
             {
                 gO.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                gO.GetComponent<AudioSource>().Stop();
             }
+        }
+
 
         foreach (GameObject gO in l_waterfalls)
         {
             var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
             foreach (ParticleSystem p in l_aux)
                 p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+
+            gO.GetComponent<AudioSource>().Stop();
         }
     }
 

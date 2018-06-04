@@ -18,21 +18,32 @@ public class TempleController : MonoBehaviour
 
         l_flamethrower = GameObject.FindGameObjectsWithTag("FlameThrower");
         l_flamethrower = l_flamethrower.OrderBy(go => go.name).ToArray();
+
+        foreach (var gO in l_TempleTorchs)
+            gO.GetComponent<AudioSource>().Stop();
+
+        foreach (var gO in l_flamethrower)
+            gO.GetComponent<AudioSource>().Stop();
     }
 
     void OnEnable()
     {
         if (manager.day)
+        {
             foreach (GameObject gO in l_TempleTorchs)
             {
                 gO.GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                gO.GetComponent<AudioSource>().Stop();
             }
+        }
 
         foreach (GameObject gO in l_flamethrower)
         {
             var l_aux = gO.GetComponentsInChildren<ParticleSystem>();
             foreach (ParticleSystem p in l_aux)
                 p.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            
+            gO.GetComponent<AudioSource>().Stop();  
         }
     }
 
@@ -54,7 +65,7 @@ public class TempleController : MonoBehaviour
                 }
                 l_TempleTorchs[i].GetComponentInChildren<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting); //Stop(true, ParticleSystemStopBehavior.StopEmitting);
 
-                
+
                 aS = l_TempleTorchs[i + 1].GetComponent<AudioSource>();
                 if (aS != null && aS.isPlaying)
                 {
