@@ -9,18 +9,12 @@ public class EgyptController : MonoBehaviour
     public GameObject[] l_EgyptTorchs;
     public GameObject[] l_waterfalls;
 
-    private Queue<AudioSource> l_waterfallsSounds;
-    private Queue<AudioSource> l_torchsSounds;
-
     // Use this for initialization
     void Awake()
     {
         l_EgyptTorchs = GameObject.FindGameObjectsWithTag("EgyptTorch");
 
         l_waterfalls = GameObject.FindGameObjectsWithTag("Waterfalls");
-
-        l_waterfallsSounds = new Queue<AudioSource>();
-        l_torchsSounds = new Queue<AudioSource>();
     }
 
     // Update is called once per frame
@@ -42,12 +36,12 @@ public class EgyptController : MonoBehaviour
 
     public IEnumerator Manage_EgyptTorchs(AudioManager am)
     {
-
+        AudioSource aS;
         if (manager.day)
         {
             foreach (GameObject t in l_EgyptTorchs)
             {
-                AudioSource aS = t.GetComponent<AudioSource>();
+                aS = t.GetComponent<AudioSource>();
                 if (aS != null && aS.isPlaying)
                 {
                     aS.Stop();
@@ -66,7 +60,7 @@ public class EgyptController : MonoBehaviour
         {
             foreach (GameObject t in l_EgyptTorchs)
             {
-                AudioSource aS = t.GetComponent<AudioSource>();
+                aS = t.GetComponent<AudioSource>();
                 if (aS != null)
                 {
                     aS.pitch = Random.Range(0.8f, 1.2f);
@@ -103,7 +97,6 @@ public class EgyptController : MonoBehaviour
             foreach (ParticleSystem p in l_aux)
             {
                 p.Play(true);
-                l_waterfallsSounds.Enqueue(am.PlayShoot("Waterfall"));
             }
 
         }
