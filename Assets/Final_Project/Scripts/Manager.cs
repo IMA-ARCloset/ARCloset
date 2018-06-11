@@ -11,6 +11,8 @@ public class Manager : MonoBehaviour
     public VillageController villageController;
     public AudioManager audioManager;
     public Camera camera;
+    public AudioListener audioListener;
+    public CanvasController canvasController;
 
     public GameObject[] l_scenes;
     public GameObject[] l_characters;
@@ -19,7 +21,7 @@ public class Manager : MonoBehaviour
     public Transform day_transform, night_transform;
     public int current_scene, current_character, total_characters, total_scenes;
     public float sun_speed = 0.1f;
-    public bool day = true, transition = false, sound = false;
+    public bool day, transition, sound;
     public int changing = 0; //0: escenarios, 1: modelos
     public GameObject templeScene, villageScene, EgyptScene;
     public Coroutine special_effectCorroutine;
@@ -40,6 +42,9 @@ public class Manager : MonoBehaviour
         total_characters = l_characters.Length;
         current_character = 0;
 
+        day = true;
+        transition = false;
+        sound = true;
         special_effect = false;
 
         for (int i = 0; i < total_scenes; i++)
@@ -56,6 +61,8 @@ public class Manager : MonoBehaviour
 
     private void Update()
     {
+        // SOLO PARA DEBUG, DESCOMENTAR PARA PROBAR CÓMODAMENTE LAS OPCIONES DE KINECT Y ALGUN RECONOCIMIENTO POR VOZ
+
         if (Input.GetKeyDown("n") && !transition)
             Change_dayNight();
 
@@ -65,6 +72,20 @@ public class Manager : MonoBehaviour
         if (Input.GetKeyDown("e") && special_effectCorroutine == null)
             Special_effect();
 
+        if (Input.GetKeyDown("s"))
+        {
+            sound = !sound;
+            if (sound)
+            {
+                audioListener.enabled = true;
+                canvasController.soundImage.sprite = canvasController.soundOnSprite;
+            }
+            else
+            {
+                audioListener.enabled = false;
+                canvasController.soundImage.sprite = canvasController.soundOffSprite;
+            }
+        }
 
         if (current_scene == (int)escenario.Village && !day && !transition)
             cameraManager.Enable_bloom();

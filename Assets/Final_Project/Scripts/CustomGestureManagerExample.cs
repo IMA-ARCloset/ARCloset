@@ -58,7 +58,7 @@ public class CustomGestureManagerExample : MonoBehaviour
                     break;
                 default:
                     Debug.Log(gesture.Name);
-                break;
+                    break;
             }
         }
 
@@ -76,10 +76,10 @@ public class CustomGestureManagerExample : MonoBehaviour
             if (frame != null && frame.DiscreteGestureResults != null)
             {
                 gesture1 = gesture2 = gesture3 = gesture4 = null;
-                
+
                 gesture1 = frame.DiscreteGestureResults[_gesture1];
                 gesture2 = frame.DiscreteGestureResults[_gesture2];
-               
+
                 Do_things(frame);
             }
         }
@@ -91,13 +91,18 @@ public class CustomGestureManagerExample : MonoBehaviour
         {
             if (manager.special_effectCorroutine == null)
             {
-                Debug.Log("EFECTO");
                 manager.Special_effect();
             }
         }
         else if (gesture1.Detected == true)
         {
             canvasController.OptionGesture();
-        } 
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            canvasController.OptionGesture();
     }
 }

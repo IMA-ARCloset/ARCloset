@@ -6,9 +6,11 @@ using UnityEngine.Windows.Speech;
 
 public class VoiceController : MonoBehaviour
 {
+    public AudioListener audioListener;
+    
     //Reconocimiento por voz
     public string[] keywords;
-    public ConfidenceLevel confidence = ConfidenceLevel.Medium;
+    public ConfidenceLevel confidence;
     protected KeywordRecognizer recognizer;
 
     public Manager manager;
@@ -17,6 +19,8 @@ public class VoiceController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        confidence = ConfidenceLevel.Medium;
+
         keywords = new string[] { "ayuda", "continuar", "siguiente", "anterior", "escenario", "personaje", "día", "noche", "sonido", "salir" };
 
         if (keywords != null)
@@ -80,9 +84,15 @@ public class VoiceController : MonoBehaviour
                     {
                         manager.sound = !manager.sound;
                         if (manager.sound)
+                        {
+                            audioListener.enabled = true;
                             canvasController.soundImage.sprite = canvasController.soundOnSprite;
+                        }
                         else
+                        {
+                            audioListener.enabled = false;
                             canvasController.soundImage.sprite = canvasController.soundOffSprite;
+                        }
                     }
                     break;
                 case "salir":

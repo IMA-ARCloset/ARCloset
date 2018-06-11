@@ -5,6 +5,7 @@ using TMPro;
 
 public class CanvasController : MonoBehaviour 
 {
+    public Manager manager;
     public GameObject helpPanel, gamePanel;
     public Image dayImage, soundImage;
     public Sprite sunSprite, moonSprite, soundOnSprite, soundOffSprite;
@@ -18,6 +19,11 @@ public class CanvasController : MonoBehaviour
         settingsOpened = false;
         transition = false;
         help = true;
+
+        if(manager.sound)
+            soundImage.sprite = soundOnSprite;
+        else
+            soundImage.sprite = soundOffSprite;
     }
 
     public void GoToApp()
