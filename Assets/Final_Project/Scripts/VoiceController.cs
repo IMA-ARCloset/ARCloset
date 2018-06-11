@@ -15,6 +15,7 @@ public class VoiceController : MonoBehaviour
 
     public Manager manager;
     public CanvasController canvasController;
+    public AudioManager audioManager;
 
     // Use this for initialization
     void Start()
@@ -85,12 +86,14 @@ public class VoiceController : MonoBehaviour
                         manager.sound = !manager.sound;
                         if (manager.sound)
                         {
-                            audioListener.enabled = true;
+                            audioManager.UnMuteAll();
+                            //audioListener.enabled = true;
                             canvasController.soundImage.sprite = canvasController.soundOnSprite;
                         }
                         else
                         {
-                            audioListener.enabled = false;
+                            audioManager.MuteAll();
+                            //audioListener.enabled = false;
                             canvasController.soundImage.sprite = canvasController.soundOffSprite;
                         }
                     }

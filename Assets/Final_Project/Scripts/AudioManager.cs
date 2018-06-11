@@ -7,6 +7,7 @@ public class AudioManager : MonoBehaviour
 {
 
     public Sound[] sounds;
+    public Manager manager;
     public static AudioManager instance;
     private float generalVolumeFactor;
 
@@ -118,5 +119,45 @@ public class AudioManager : MonoBehaviour
     private float Map(float s, float a1, float a2, float b1, float b2)
     {
         return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
+    }
+
+    public void MuteAll()
+    {
+        foreach (var t in manager.templeController.l_TempleTorchs)
+            t.GetComponent<AudioSource>().mute = true;
+
+        foreach (var f in manager.templeController.l_flamethrower)
+            f.GetComponent<AudioSource>().mute = true;
+
+        foreach (var t in manager.egyptController.l_EgyptTorchs)
+            t.GetComponent<AudioSource>().mute = true;
+
+        foreach (var w in manager.egyptController.l_waterfalls)
+            w.GetComponent<AudioSource>().mute = true;
+
+        foreach (var r in manager.villageController.l_VillageRain)
+            r.GetComponent<AudioSource>().mute = true;
+
+        manager.villageController.GetComponent<AudioSource>().mute = true;
+    }
+
+    public void UnMuteAll()
+    {
+        foreach (var t in manager.templeController.l_TempleTorchs)
+            t.GetComponent<AudioSource>().mute = false;
+
+        foreach (var f in manager.templeController.l_flamethrower)
+            f.GetComponent<AudioSource>().mute = false;
+
+        foreach (var t in manager.egyptController.l_EgyptTorchs)
+            t.GetComponent<AudioSource>().mute = false;
+
+        foreach (var w in manager.egyptController.l_waterfalls)
+            w.GetComponent<AudioSource>().mute = false;
+
+        foreach (var r in manager.villageController.l_VillageRain)
+            r.GetComponent<AudioSource>().mute = false;
+
+        manager.villageController.GetComponent<AudioSource>().mute = false;
     }
 }
